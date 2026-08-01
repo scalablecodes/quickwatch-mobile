@@ -11,6 +11,8 @@ const logout = async () => {
     await AsyncStorage.removeItem("email")
     await AsyncStorage.removeItem("zip")
     await AsyncStorage.removeItem("check")
+    await AsyncStorage.removeItem("cust_id")
+    await AsyncStorage.removeItem("paymethod_id")
 
     router = useRouter()
 

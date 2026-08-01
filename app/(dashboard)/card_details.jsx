@@ -9,10 +9,11 @@ import ThemedHeader from "../../components/ThemedHeader"
 import ThemedCard from "../../components/ThemedCard"
 import ThemedText from "../../components/ThemedText"
 import { Dropdown } from "react-native-element-dropdown"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Colors } from "../../constants/colors"
 import ThemedButton from "../../components/ThemedButton"
-import { getCards } from "../API"
+import getUsers, { getCards, getMakeRequest, getPayments } from "../API"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const data = [
     {'label': 'United States', 'value': 'United States'},
@@ -25,6 +26,8 @@ const data1 = [
 const CardDetails = () => {
 
     const router = useRouter()
+
+    const [id, setId] = useState("")
 
     const [firstname, setfirstname] = useState("")
 
@@ -50,39 +53,118 @@ const CardDetails = () => {
 
     const [cvv, setcvv] = useState("")
 
+    const [email, setEmail] = useState("")
+
+    const [plan, setPlan] = useState("")
+
+    const [customer, setcustomer] = useState("")
+
     const [visible, setVisible] = useState(false)
     
     const [modalTxt, set_modal_text] = useState("")
     
     const [visible1, setVisible1] = useState(false)
+
+    const [visible3, setVisible3] = useState(false)
+
+
+
+    const getemailId = async() => {
+
+        let em = await AsyncStorage.getItem("email")
+        setEmail(em)
+
+        let plan = await AsyncStorage.getItem("plan")
+        setPlan(plan)
+
+        getCards().get('/').then(response => {
+            let cardInfo = response.data.filter(u => u.email === em)[0]
+            if(cardInfo){
+                setId(cardInfo.id)
+                setEmail(cardInfo.email)
+                setfirstname(cardInfo.firstname)
+                setlastname(cardInfo.lastname)
+                setaddress1(cardInfo.address1)
+                setaddress2(cardInfo.address2)
+                setcountry(cardInfo.country)
+                setstate(cardInfo.state)
+                setcity(cardInfo.city)
+                setzipcode(cardInfo.zipcode)
+                setmobile(cardInfo.mobile)
+               // setcardnumber(cardInfo.cardnumber)
+               // setexpirationdate(cardInfo.expirationdate)
+               // setcvv(cardInfo.cvv)
+                setPlan(cardInfo.plan)
+
+            }
+
+        })
+    }
+
+    useEffect(() => {
+        getemailId()
+        getCustomerId()
+    },[])
+
+    const getCustomerId = async() => {
+            let em = await AsyncStorage.getItem("email")
+
+            getUsers().get("/")
+            .then(response => {
+                const user = response.data.filter(c => c.email == em)[0]
+                setcustomer(user.customer)
+            })
+            .catch(error => console.log('An error has occurred ' + error))
+    }
     
     const onSubmit =  async () => {
-        if(firstname == "" || lastname == "" || address1 == "" || address2 == "" || country == "" || state == "" || city == "" || zipcode == "" || mobile == "" || cardnumber == "" || expirationdate == "" || cvv == ""){
+        if(firstname == "" || lastname == "" || address1 == "" || country == "" || state == "" || city == "" || zipcode == "" || mobile == ""  || plan == ""){
             set_modal_text("Fill in all fields")
             setVisible1(true)
         }else{
-        try{        
+        try{   
+                 
             setVisible(true)
-            let items = {firstname, lastname, address1, address2, country, state, city, zipcode, mobile, cardnumber, expirationdate, cvv}
+            let status = false
+            getCards().get('/').then(response => {
+                let cardInfo = response.data.filter(u => u.email === email)[0]
+                if(cardInfo){
+                    status = true
+                }
+            })
+            
+            let items = {firstname, lastname, address1, address2, country, state, city, zipcode, mobile, email, plan}
+            
             setTimeout(() => {
-            setVisible(false)
+                setVisible(false)
 
-            getCards().post('/', items)
-                .then(() => router.push("/mother_home"))
-                .catch(function(error){
-                    console.log(error.toJSON());
-                })
-
+                if(status !== true){
+                    getCards()
+                        .post('/', items)
+                        .then(() => {
+                            router.push("/mother_home")
+                        })      
+                        .catch(function(error){
+                            console.log('An error has occurred ' + error)
+                        });
+                }else if(status == true){
+                    getCards().patch(`/${id}/`, items)
+                        .then(() => {
+                            router.push("/mother_home")
+                        })
+                        .catch(function(error){
+                            console.log('An error 2 has occurred ' + error);
+                    })
+                }
+                
             },3000)
 
         }catch(error){
-            console.log('An error has occured 2' + error)
+            console.log('An error has occured 3' + error)
         }
     }
       
     }
-
-    
 
     return(
         <KeyboardAvoidingContainer>
@@ -144,7 +226,7 @@ const CardDetails = () => {
 
                     <ThemedCard style={[styles.card_box]}>
                         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} >
-                            <ThemedText style={[styles.input_text]}>Address 2</ThemedText>
+                            <ThemedText style={[styles.input_text]}>Address 2 (optional)</ThemedText>
                             <TextInput
                                 placeholder=""
                                 value={address2}
@@ -231,9 +313,9 @@ const CardDetails = () => {
 
                 </ThemedCard>
 
-                <Spacer height={40} />
+                <Spacer height={20} />
 
-                <ThemedText style={[styles.heading_text, {textAlign: 'center'}]}>CARD INFORMATION</ThemedText>
+                {/*<ThemedText style={[styles.heading_text, {textAlign: 'center'}]}>CARD INFORMATION</ThemedText>
                 <ThemedCard style={styles.card}>
 
                     <ThemedCard style={[styles.card_box]}>
@@ -272,7 +354,7 @@ const CardDetails = () => {
                     </ThemedCard>
 
 
-                </ThemedCard>
+                </ThemedCard>*/}
 
                 <Spacer height={30} />
 
@@ -309,6 +391,23 @@ const CardDetails = () => {
                             size={15} 
                             style={{alignSelf: 'flex-end'}}
                             onPress={() => setVisible1(false)}
+                        />
+                        <MaterialCommunityIcons color="red" name='cancel' size={40} />
+                        <ThemedText style={[styles.loading_text, {fontSize: 14}]}>{modalTxt}</ThemedText>
+                        </ThemedView>
+                </Modal>
+                <Modal
+                    transparent
+                    visible={visible3}
+                    animationType='mark'
+                >
+                    <ThemedView style={[styles.errorText]}>
+                        <FontAwesome  
+                            color="#000000"
+                            name='times' 
+                            size={15} 
+                            style={{alignSelf: 'flex-end'}}
+                            onPress={() => setVisible3(false)}
                         />
                         <MaterialCommunityIcons color="red" name='cancel' size={40} />
                         <ThemedText style={[styles.loading_text, {fontSize: 14}]}>{modalTxt}</ThemedText>

@@ -49,7 +49,7 @@ const ChatHome = () => {
             />
         </ThemedView>
 
-        <ThemedHeader>QUICK WATCH</ThemedHeader>
+        <ThemedHeader>QUICK WATCH1</ThemedHeader>
 
         <Spacer height={30} />
  

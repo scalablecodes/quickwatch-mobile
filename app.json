@@ -7,6 +7,10 @@
     "orientation": "portrait",
     "icon": "./assets/quickwatch.png",
     "userInterfaceStyle": "light",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -14,9 +18,14 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.macdaniel.quickwatch",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.macdaniel.quickwatch",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -27,8 +36,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
-
+      "expo-font",
+      "expo-web-browser"
     ],
     "extra": {
       "router": {

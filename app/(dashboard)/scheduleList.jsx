@@ -62,7 +62,7 @@ const ScheduleList = () => {
                     let day     = dateObj.getUTCDate();
                     let year    = dateObj.getUTCFullYear();
 
-                    let newDate = year + "/" + month + "/" + day;
+                    let newDate = month + "/" + day + "/" + year;
                     return(
                         <ThemedCard key={r.id} style={styles.outer_card}>
                             <ThemedText 
@@ -93,6 +93,9 @@ const ScheduleList = () => {
                                                     ADDRESS
                                                 </ThemedText>
                                                 <ThemedText style={styles.card_text}>
+                                                    ZIP CODE
+                                                </ThemedText>
+                                                <ThemedText style={styles.card_text}>
                                                     TIME
                                                 </ThemedText>
                                                 <ThemedText style={styles.card_text}>
@@ -117,12 +120,14 @@ const ScheduleList = () => {
                                                 <ThemedText style={[styles.card_text, {width: 160}]}>
                                                     - {(r.address).length > 20 ? r.address.slice(0, 20) + '...' : r.address}
                                                 </ThemedText>
-                                                
+                                                <ThemedText style={styles.card_text}>
+                                                    - {r.zipcode}
+                                                </ThemedText>
                                                 <ThemedText style={styles.card_text}>
                                                     - {r.startTime}-{r.endTime}
                                                 </ThemedText>
                                                 <ThemedText style={styles.card_text}>
-                                                    -{newDate}
+                                                    - {newDate}
                                                 </ThemedText>
                                                 <ThemedText style={styles.card_text}>
                                                     - $ {r.rate_hour}/HR
@@ -181,7 +186,7 @@ const styles = StyleSheet.create({
         paddingVertical: 25, 
         paddingHorizontal: 25,
         alignSelf: 'center', 
-        height: 480, 
+        //height: 520, 
         backgroundColor: Colors.primary,
         marginVertical: 10
     },
@@ -191,7 +196,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 'auto',
         width: 280,
         backgroundColor: '#D9ECF3',  
-        height: 350
+        height: 380
     },
     side_circle: {
         width: 30,

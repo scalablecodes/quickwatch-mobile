@@ -82,12 +82,41 @@ const EditWatcher = () => {
     }, [])
 
     const getAllWatchers = async () => {
+
+         let em = await AsyncStorage.getItem("email")
+        setEmail(em)
+
+        let sk = await AsyncStorage.getItem("skills")
+        setskills(sk)
+
+        let abt = await AsyncStorage.getItem("about")
+        setaboutme(abt)
+
+        let pic = await AsyncStorage.getItem("picture")
+        setPicture(pic)
+
+        let cp = await AsyncStorage.getItem("cpr")
+        cp === "true" ? cp = true : cp = false
+        setcpr(cp)
+
+        let faid = await AsyncStorage.getItem("firstaid")
+        faid === "true" ? faid = true : faid = false
+        setfirstaid(faid)
+
+        let bck = await AsyncStorage.getItem("backcheck")
+        bck === "true" ? bck = true : bck = false
+        setbackcheck(bck)
+
+        let hr = await AsyncStorage.getItem("hour_rate")
+        sethour_rate(hr)
+
         getWatchers().get("/")
-        .then(response => setWatchers(response.data))
+        .then(response => {
+            setWatchers(response.data.filter(u => u.email === em))
+        }
+        )
         .catch(error => console.log("An error has occurred " + error))
 
-        let em = await AsyncStorage.getItem("email")
-        setEmail(em)
     }
 
   const pickImage = async () => {
@@ -189,16 +218,17 @@ const EditWatcher = () => {
                     let id = watcher.id
                     let items = {state, city, skills, about, hour_rate, picture, cpr, firstaid, backcheck}
                     getWatchers().patch(`/${id}/`, items)
-                    router.push("/watcher_home")
+                    .then(() => router.push("/watcher_home"))
+                    .catch(function(error){
+                        console.log(error.toJSON())
+                    })
                     
                 } catch (error) {
                     console.log('An error has occurred' + error)
                 }
             }, 3000)
         }
-  }
-
-  
+  }  
 
   return (
     <KeyboardAvoidingContainer>
@@ -271,7 +301,7 @@ const EditWatcher = () => {
         <TextInput 
             style={[styles.textInput, {height: 80}]} 
             placeholder='About Me...' 
-            value={about}
+            value={about }
             multiline={true}
             enablesReturnKeyAutomatically={true}
             onChangeText={(txt) => setaboutme(txt)}
@@ -316,7 +346,7 @@ const EditWatcher = () => {
                  {
                     (backcheck === true) ? <ThemedView style={[styles.rect]}></ThemedView>
                     :
-                <ThemedView style={[styles.rect2]}></ThemedView>
+                    <ThemedView style={[styles.rect2]}></ThemedView>
 
                  }
         </ThemedButton>
@@ -346,21 +376,33 @@ const EditWatcher = () => {
         <Spacer height={40} />
 
          <ThemedView style={[]}>
-            {image == null ?
-                <Pressable                 
-                    onPress={pickImage} 
-                    style={[styles.upload]}
-                >
-                </Pressable> :
-                <Image borderRadius={50} source={{ uri: image }} style={styles.image} />}
+        
+        {
+            image == null ?
+                    <Image borderRadius={50} source={{uri: picture }} style={styles.image} /> :
+                    <Image borderRadius={50} source={{uri: picture }} style={styles.image} />
+
+        }
+            
+            {
+                /*image == null ?
+                    <Pressable style={[styles.upload]} onPress={pickImage} ></Pressable>
+                     :
+                    <Image borderRadius={50} source={{uri: image }} style={styles.image} />*/
+
+            }
+            
         
             <Spacer height={20} />
-            <ThemedText 
-                style={[styles.upload_text]}
-            >
-                Upload Photo
-            </ThemedText>
-      
+
+            <Pressable onPress={pickImage} >
+                    <ThemedText 
+                        style={[styles.upload_text]}
+                    >
+                        Upload Photo
+                    </ThemedText>  
+            </Pressable>
+    
         </ThemedView>
 
         <Spacer height={40} />

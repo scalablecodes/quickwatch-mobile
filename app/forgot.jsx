@@ -13,6 +13,7 @@ import ThemedHeader from '../components/ThemedHeader'
 import { useEffect, useState } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import getUsers from './API'
 
 const Forgot = () => {
 
@@ -22,22 +23,26 @@ const Forgot = () => {
 
     const [password, setPassword] = useState("")
 
+    //const [id, setId] = useState("")
 
     useEffect(() => {
-        getEmail()
+        //getEmail()
     }, [])
 
-    const getEmail = async () => {
-        let em = await AsyncStorage.getItem("email")
-        let em_replace = em.replaceAll('"', '')
-
-        setEmail(em_replace)
-    }
-
+    let usr = []
+    let id = ""
     const handleSubmit = async () => {
         if(email !== "" && password !== ""){
-            await AsyncStorage.setItem("passwd", JSON.stringify(password))
-            router.push("/login")
+            getUsers().get("/").then(response => {
+            const usr = response.data.filter(u => u.email == email)[0]
+            if(usr){
+                id = usr.id
+                getUsers().patch(`/${id}/`, {password: password}).then(() => router.push("/login"))
+                .catch(error => console.log("Án error has occurred2 " + error + id))
+            }
+            }).catch(error => console.log('An error has occurred ' + error))
+
+           
         }
     }
 
@@ -61,10 +66,21 @@ const Forgot = () => {
             
         <Spacer height={20} />
 
-        <ThemedCard style={{alignSelf: 'center', height: 335, backgroundColor: Colors.primary, paddingHorizontal: 20, paddingVertical: 90}}>
+        <ThemedCard style={{alignSelf: 'center', height: 335, backgroundColor: Colors.primary, paddingHorizontal: 20, paddingVertical: 60}}>
+            
+            <ThemedText style={{color: '#fff', fontSize: 20, fontFamily: 'InriaSerif', fontWeight: 400}}>
+                    Care Seeker Change Password
+            </ThemedText>
+
+            <Spacer height={20} />
+
             <TextInput  
                 value={email}
                 style={styles.textInput} 
+                placeholder='Email Address' 
+
+                onChangeText={(em) => setEmail(em)}
+
             />
             <Spacer />
             <TextInput 
@@ -90,11 +106,7 @@ const Forgot = () => {
         <Spacer height={20} />
 
         <ThemedView style={[]}>
-        {/*<ThemedText style={styles.bottom_text}>
-        </ThemedText>*/}
-        {/*<Link style={{}} href={router.push("/login")}>*/}
-          <ThemedText onPress={() => router.push("/login")} style={[styles.bottom_text,{color: '#03097E'}]}>LOGIN</ThemedText>
-        {/*</Link>*/}
+          <ThemedText onPress={() => router.push("/login")} style={[styles.bottom_text,{color: '#03097E'}]}>Care Seeker Login</ThemedText>
       </ThemedView>
 
     </ThemedView>

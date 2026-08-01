@@ -36,9 +36,9 @@ const Login = () => {
     const getDetails = async () => {
         try{
           getUsers().get("/").then(response => setUsers(response.data))
-          .catch(error => console.log('An error has occurred ' + error))
+          .catch(error => console.log('An error has occurred1 ' + error))
         }catch(error){
-            console.log("An error has occurred ", error)
+            console.log("An error has occurred2 ", error)
         }
     }
 
@@ -54,7 +54,7 @@ const Login = () => {
             if(user){
                 await AsyncStorage.setItem("email", email)
                 await AsyncStorage.setItem("about", user.about)
-                await AsyncStorage.setItem("picture", user.picture)
+                //await AsyncStorage.setItem("picture", user.picture)
 
                 router.replace("/mother_home")
             }else{
@@ -110,6 +110,9 @@ const Login = () => {
                     onChangeText={(pass) => setPassword(pass)}
                 />
             </KeyboardAvoidingView>
+
+            <ThemedText onPress={() => router.push("/forgot")} style={[styles.bottom_text,{color: '#03097E'}]}>Forgot Password Here</ThemedText>
+
         </ThemedCard>
 
         <Spacer />
@@ -126,13 +129,8 @@ const Login = () => {
         <Spacer height={20} />
 
       <ThemedView style={[]}>
-        {/*<ThemedText style={styles.bottom_text}>
-        </ThemedText>*/}
-        {/*<Link style={{}} href={router.push("/forgot")}>*/}
           <ThemedText onPress={() => router.push("/login_watcher")} style={[styles.bottom_text,{color: '#03097E'}]}>Watcher Login Here</ThemedText>
-        {/*</Link>*/}
       </ThemedView>
-
     </ThemedView>
     <Modal
             transparent

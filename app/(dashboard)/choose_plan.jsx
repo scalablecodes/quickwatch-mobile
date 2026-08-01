@@ -8,6 +8,7 @@ import ThemedText from '../../components/ThemedText'
 import { useRouter } from 'expo-router'
 import ThemedCard from '../../components/ThemedCard'
 import ThemedButton from '../../components/ThemedButton'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const ChoosePlan = () => {
 
@@ -38,7 +39,7 @@ const ChoosePlan = () => {
             </ThemedText>
         </ThemedView>
 
-        <Spacer height={40} />
+        <Spacer height={20} />
 
         <ThemedCard style={[styles.outercard]}>
             <ThemedCard style={[styles.card]}>
@@ -85,15 +86,38 @@ const ChoosePlan = () => {
                     <ThemedText style={[styles.text]}>
                         Unlimited messaging
                     </ThemedText>
+
+                    <Spacer height={7} />
+
+                    <ThemedText style={[styles.text]}>
+                        $5 fee if payment under $100
+                    </ThemedText>
+
+                    <Spacer height={7} />
+
+                    <ThemedText style={[styles.text]}>
+                        $7 if you are paying under $160
+                    </ThemedText>
+
+                    <Spacer height={7} />
+
+                    <ThemedText style={[styles.text]}>
+                        $10 if you are paying above $160
+                    </ThemedText>
+
                 </ThemedView>
 
                 {/*<Spacer height={20} />*/}
 
-                <ThemedButton style={[styles.btn]} onPress={() => router.push("/card_details")}>
+                <ThemedButton style={[styles.btn]} onPress={async () => {
+                    await AsyncStorage.setItem("plan", "Quick Start")
+                    router.push("/card_details")
+                }}>
                     <ThemedText style={[styles.text, {color: '#000000', fontSize: 14}]}>Start for free</ThemedText>
                 </ThemedButton>
 
             </ThemedCard>
+            {/*
             <ThemedCard  style={[styles.card]}>
 
                 <ThemedText style={[styles.cardText]}>Quick Plus</ThemedText>
@@ -144,15 +168,18 @@ const ChoosePlan = () => {
                     </ThemedText>
                 </ThemedView>
 
-                {/*<Spacer height={65} />*/}
 
-                <ThemedButton style={[styles.btn]} onPress={() => router.push("/card_details")}>
+                <ThemedButton style={[styles.btn]} onPress={async() => {
+                    await AsyncStorage.setItem("plan", "Quick Plus")
+                    router.push("/card_details")
+                }}>
                     <ThemedText style={[styles.text, {color: '#000000', fontSize: 14}]}>
                         Upgrade
                     </ThemedText>
                 </ThemedButton>
 
             </ThemedCard>
+            */}
         </ThemedCard>
 
     </ThemedView>
@@ -189,18 +216,21 @@ const styles = StyleSheet.create({
     },
     outercard: {
         width: '100%',
-        flexDirection: 'row',
-        paddingHorizontal: 5
+        //flexDirection: 'row',
+        //paddingHorizontal: 5,
+        alignItems: 'center'
+
     },
     card: {
         backgroundColor: '#6A52BE',
         height: 500,
-        width: '47%',
+        width: '70%',
         borderRadius: 10,
         marginHorizontal: 5,
         paddingHorizontal: 5,
         paddingVertical: 20,
-        marginBottom: 40
+        marginBottom: 40,
+        
     },
     cardText: {
         color: '#ffffff',

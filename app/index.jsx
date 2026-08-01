@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native"
+import { View, Text, StyleSheet, Pressable, Linking } from "react-native"
 import { Link, useNavigation, useRouter } from "expo-router"
 import ThemedView from "../components/ThemedView"
 import ThemedLogo from "../components/ThemedLogo"
@@ -8,23 +8,27 @@ import Spacer from "../components/Spacer"
 import { Colors } from "../constants/colors"
 import ThemedHeader from "../components/ThemedHeader"
 
+
 const Home = () => {
 
   const router = useRouter()
 
   const router2 = useNavigation()
 
+  
+
   const handleClick = () => {
     router2.navigate("mother_register")
   }
 
+   
   return(
     <ThemedView style={styles.container}>
 
       <Spacer height={60} />
 
       <ThemedHeader>QUICK WATCH</ThemedHeader>
-
+  
       <Spacer height={20} />
 
       <ThemedLogo style={styles.img} />
@@ -46,7 +50,7 @@ const Home = () => {
       <ThemedButton onPress={() => router.push("/watcher_register1")} style={{backgroundColor: '#CBE9F4',  height: 76,
         width: 252, borderRadius: 25,
       }}>
-        <ThemedText style={[styles.btn_text, {color: '#000000'}]}>I'M A WATCHER</ThemedText>
+        <ThemedText style={[styles.btn_text, {color: '#000000'}]}>I'M A BABYSITTER</ThemedText>
       </ThemedButton>
 
       <Spacer height={20} />

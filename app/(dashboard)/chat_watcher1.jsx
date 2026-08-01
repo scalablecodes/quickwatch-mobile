@@ -15,6 +15,9 @@ import { Dropdown } from 'react-native-element-dropdown'
 import getUsers, { getChats, getMakeRequest, getWatchers } from '../API'
 import KeyboardAvoidingContainer from '../../components/KeyboardAvoidingContainer'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns';
+import moment from 'moment'
+
 
 const ChatWatcher1 = () => {
 
@@ -30,7 +33,6 @@ const ChatWatcher1 = () => {
     
     const [reciever_email, setreciever_email] = useState("")
     
-
     useEffect(() => {
         getAllMakeRequest()
 
@@ -88,7 +90,63 @@ const ChatWatcher1 = () => {
          
         }
 
-    
+        const cancelRequest = (id) => {
+            let item = {status: false, email_to: ""}
+            getMakeRequest().patch(`/${id}/`, item).then(() => router.push('/chat_watcher1'))
+        }
+
+        const getTimeDiff = (time1, time2) => {
+            const start = moment(time1, "hh:mm A");
+            const end = moment(time2, "hh:mm A");
+            const duration = moment.duration(end.diff(start));
+            console.log(duration.hours() + ":" + duration.minutes());
+             return duration.hours();
+        }
+
+        const convertTime12to24Start = (time12h) => {
+            const [time, modifier] = time12h.split(' ');
+            let [hours, minutes] = time.split(':');
+
+            if (hours === '12') {
+                hours = '00';
+            }
+
+            if (modifier === 'PM') {
+                hours = parseInt(hours, 10) + 12;
+            }
+
+            const hours_start = parseInt(hours, 10);
+            const minutes_start = parseInt(minutes, 10) || 0; // Use 0 if minutes are missing
+            const decimalTime = hours_start + minutes_start / 60;
+
+            return decimalTime
+
+            // Use padStart to ensure two digits for hours and minutes
+           // return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        };
+
+        const convertTime12to24End = (time12h) => {
+            const [time, modifier] = time12h.split(' ');
+            let [hours, minutes] = time.split(':');
+
+            if (hours === '12') {
+                hours = '00';
+            }
+
+            if (modifier === 'PM') {
+                hours = parseInt(hours, 10) + 12;
+            }
+
+            const hours_start = parseInt(hours, 10);
+            const minutes_start = parseInt(minutes, 10) || 0; // Use 0 if minutes are missing
+            const decimalTime = hours_start + minutes_start / 60;
+
+            return decimalTime
+
+            // Use padStart to ensure two digits for hours and minutes
+            //return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        };
+
     return(
         <KeyboardAvoidingContainer>
         <ThemedView style={[styles.container]}>
@@ -110,10 +168,9 @@ const ChatWatcher1 = () => {
 
         {
             requests.length === 0 ?
-            <ThemedText style={[styles.addText, {verticalAlign: 'middle', textAlign: 'center'}]}>
-                <Spacer height={200} />
+            <ThemedText style={[styles.addText]}>
+                <Spacer height={240} />
                 There are no chats available at this time
-                <Spacer height={250} />
             </ThemedText> :
 
             requests.map(r => {
@@ -123,6 +180,16 @@ const ChatWatcher1 = () => {
                     let year    = dateObj.getUTCFullYear();
 
                     let newDate = year + "/" + month + "/" + day;
+                    //let total_rate = r.rate_hour * (convertTime12to24End(r.endTime) - convertTime12to24Start(r.startTime))
+                    let total_rate = r.rate_hour * (getTimeDiff(r.startTime, r.endTime))
+
+                    if(total_rate < 100){
+                       total_rate = total_rate + 5
+                    }else if(total_rate >= 100 && total_rate < 160){
+                       total_rate = total_rate + 7
+                    }else if(total_rate > 160){
+                       total_rate = total_rate + 10
+                    }
             return(
             <ThemedView key={r.id}>
             <Image style={styles.img} 
@@ -184,17 +251,17 @@ const ChatWatcher1 = () => {
                             - {r.location}
                         </ThemedText>
                         <ThemedText style={[styles.card_text, {width: 160}]}>
-                            - {(r.address).length > 20 ? r.address.slice(0, 20) + '...' : r.address}
+                            - {(r.address).length > 18 ? r.address.slice(0, 18) + '...' : r.address}
                         </ThemedText>
                                                 
                         <ThemedText style={styles.card_text}>
-                            - {r.startTime}-{r.endTime}
+                            - {r.startTime}-{r.endTime} 
                         </ThemedText>
                         <ThemedText style={styles.card_text}>
                             -{newDate}
                         </ThemedText>
                         <ThemedText style={styles.card_text}>
-                            - $ {r.rate_hour}/HR
+                            - $ {r.rate_hour}/HR = ${total_rate} incl fee
                         </ThemedText>
                         <ThemedText style={styles.card_text}>
                             - {r.child_no}
@@ -206,8 +273,9 @@ const ChatWatcher1 = () => {
                 </ThemedView>
                 <ThemedButton
                     style={[styles.btn, styles.column, {alignSelf: 'center'}]}
+                    onPress={() => cancelRequest(r.id)}
                 >
-                    <ThemedText style={[styles.card_text, {color: '#ffffff', textAlign: 'center'}]}>Accepted</ThemedText>
+                    <ThemedText style={[styles.card_text, {color: '#ffffff', textAlign: 'center'}]}>Cancel</ThemedText>
                     </ThemedButton>
             </ThemedCard>
 
@@ -261,7 +329,8 @@ const ChatWatcher1 = () => {
             
         }
 
-        
+        <Spacer height={40} />
+
 
         </ThemedView>
         </KeyboardAvoidingContainer>
@@ -280,9 +349,9 @@ const styles = StyleSheet.create({
     },
      card: {
         paddingVertical: 20, 
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         marginHorizontal: 'auto',
-        width: 280,
+        width: '90%',
         backgroundColor: '#D9ECF3',  
         height: 350
     },
@@ -324,6 +393,8 @@ const styles = StyleSheet.create({
         fontFamily: 'InriaSerif',
         fontSize: 11,
         fontWeight: 400,
+        justifyContent: 'center',
+        alignItems: 'center'
        
     },
      card_text: {
@@ -414,6 +485,7 @@ const styles = StyleSheet.create({
         fontFamily: 'InriaSerif',
         fontSize: 14,
         fontWeight: 400,
+        textAlign: 'center'
        
     }, 
     backColor: {

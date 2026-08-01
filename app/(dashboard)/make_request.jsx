@@ -97,12 +97,20 @@ const MakeRequest = () => {
         () => "id-" + Math.random().toString(36).substr(2, 9)
     );
 
+    const timeRegex = /^(0?[1-9]|1[0-2]):[0-5][0-9]\s? (am|pm)$/i;
+
     const onSubmit =  async () => {
     if(selectedStartDate == null || startTime == "" || endTime == "" || child_option == "" || rate_hour == 0 || watcher_role == "" || address == "" || zipcode == ""){
         set_modal_text("Fill in all fields")
         setVisible1(true)
     }else if(child_array.length === 0){
         set_modal_text("No child added")
+        setVisible1(true)
+    }else if(!timeRegex.test(startTime)){
+        set_modal_text("correct format is 12:00 AM or 2:00 PM. leave a space between the time and (AM/PM)")
+        setVisible1(true)
+    }else if(!timeRegex.test(endTime)){
+        set_modal_text("correct format is 12:00 AM or 2:00 PM. leave a space between the time and (AM/PM)")
         setVisible1(true)
     }
     else{
@@ -239,10 +247,13 @@ const MakeRequest = () => {
                     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
                     <TextInput
                         style={[styles.text_style, styles.textFont]}
-                        placeholder='00:00'
-                        onChangeText={(start) => setStartTime(start)}
+                        placeholder='11:00 AM'
+                        onChangeText={(start) => {
+                            setStartTime(start)}
+                        }
                         value={startTime}
                     />
+                    
                     </KeyboardAvoidingView>
                 </ThemedView>
                 <ThemedView>
@@ -252,7 +263,7 @@ const MakeRequest = () => {
                     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
                     <TextInput
                         style={[styles.text_style, styles.textFont]}
-                        placeholder='00:00'
+                        placeholder='02:00 PM'
                         onChangeText={(end) => setEndTime(end)}
                         value={endTime}
                     />
@@ -357,6 +368,7 @@ const MakeRequest = () => {
                             onChangeText={(addr) => setaddress(addr)}
                             value={address}
                             enablesReturnKeyAutomatically={true}
+                            placeholder='Street, City & State'
                             multiline={true}
                         />
                     </KeyboardAvoidingView>
@@ -496,7 +508,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     text_style: {
-        width: 75, 
+        width: 100, 
         height: 40, 
         textAlign: 'center', 
         backgroundColor: '#D9D9D9',
@@ -622,7 +634,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#000',
         width: 240,
-        height: 100,
+        height: 140,
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',

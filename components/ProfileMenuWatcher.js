@@ -49,6 +49,13 @@ import { useRouter } from 'expo-router';
             <MenuOption 
                 customStyles={{optionText: {fontSize: 14, fontWeight: 700, color: '#000000', fontFamily: 'Teachers'}}} 
                 onSelect={() => router.push("/support_watcher")}  text='Support'  />
+             <MenuOption 
+                customStyles={{optionText: {fontSize: 14, fontWeight: 700, color: '#000000', fontFamily: 'Teachers'}}} 
+                onSelect={() => router.push("/payment_history_watcher")}  text='Payments'  />
+            <MenuOption 
+                customStyles={{optionText: {fontSize: 14, fontWeight: 700, color: '#000000', fontFamily: 'Teachers'}}} 
+                onSelect={() => router.push("/settings1")}  text='Settings'  />
+           
             <MenuOption 
                 customStyles={{optionText: {fontSize: 14, fontWeight: 700, color: '#000000', fontFamily: 'Teachers'}}} 
                 onSelect={() => logout()} text= "Log out" />

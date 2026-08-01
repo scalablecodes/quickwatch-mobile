@@ -52,6 +52,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
                 onSelect={() => router.push('/support')} text='Support'  />
             <MenuOption 
                 customStyles={{optionText: {fontSize: 14, fontWeight: 700, color: '#000000', fontFamily: 'Teachers'}}} 
+                onSelect={() => router.push('/settings')} text='Settings'  />
+            <MenuOption 
+                customStyles={{optionText: {fontSize: 14, fontWeight: 700, color: '#000000', fontFamily: 'Teachers'}}} 
+                onSelect={() => router.push('/payment_history')} text='Payments'  />
+            <MenuOption 
+                customStyles={{optionText: {fontSize: 14, fontWeight: 700, color: '#000000', fontFamily: 'Teachers'}}} 
                 onSelect={() => logout()} text= "Log out" />
         </MenuOptions> 
     </Menu>

@@ -81,7 +81,7 @@ const ViewProfile = () => {
                         <Spacer height={20} />
 
                         <ThemedView style={[styles.text_box]}>
-                            <ThemedText style={[styles.text]}>
+                            <ThemedText style={[styles.text, {fontSize: 20}]}>
                                 {watcher.firstname} {watcher.lastname}
                             </ThemedText>
                             <ThemedView style={[styles.active_circle]}>

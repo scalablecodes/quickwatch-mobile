@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ThemedCard from './ThemedCard'
 import ThemedText from './ThemedText'
 import { Ionicons, Entypo, } from '@expo/vector-icons'
@@ -7,6 +7,7 @@ import { Link, useRouter } from 'expo-router'
 import ProfileMenu from './ProfileMenu'
 import RequestMenu from './RequestMenu'
 import ChatMenu from './ChatMenu'
+import { getWatchers } from '../app/API'
 
 const NavigationBar = () => {
 
@@ -24,6 +25,8 @@ const NavigationBar = () => {
 
     }
   ]
+
+
 
     const router = useRouter()
 

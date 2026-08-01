@@ -101,13 +101,24 @@ const RootLayout = () => {
                     headerShown: false,
                 }}
             />
-             <Stack.Screen
+            <Stack.Screen
                 name='forgot'
                 options={{
                     headerShown: false,
                 }}
             />
-             
+            <Stack.Screen
+                name='forgot_watcher'
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name='terms'
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack>
     </>
   )

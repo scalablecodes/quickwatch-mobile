@@ -81,7 +81,7 @@ const ProfileWatcher = () => {
                         <Spacer height={20} />
 
                         <ThemedView style={[styles.text_box]}>
-                            <ThemedText style={[styles.text]}>
+                            <ThemedText style={[styles.text, {fontSize: 20}]}>
                                 {watcher.firstname} {watcher.lastname}
                             </ThemedText>
                             <ThemedView style={[styles.active_circle]}>
@@ -143,7 +143,20 @@ const ProfileWatcher = () => {
 
                     <Spacer height={60} />
 
-                    <ThemedButton style={[styles.btn, {borderColor: '#000', borderWidth: 1, vorderStyle: 'solid'}]} onPress = {() => router.replace("/edit_profile_watcher")}>
+                    <ThemedButton 
+                            style={[styles.btn, {borderColor: '#000', borderWidth: 1, vorderStyle: 'solid'}]} 
+                            onPress = {async() => {
+                                await AsyncStorage.setItem("skills", watcher.skills)
+                                await AsyncStorage.setItem("about", watcher.about)
+                                await AsyncStorage.setItem("picture", watcher.picture)
+                                await AsyncStorage.setItem("hour_rate", watcher.hour_rate)
+                                await AsyncStorage.setItem("cpr", watcher.cpr.toString())
+                                await AsyncStorage.setItem("firstaid", watcher.firstaid.toString())
+                                await AsyncStorage.setItem("backcheck", watcher.backcheck.toString())
+
+                                router.replace("/edit_profile_watcher")
+                            }}
+                    >
                         <ThemedText style={[styles.btn_text]}>Edit Profile</ThemedText>
                     </ThemedButton>
 

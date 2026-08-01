@@ -1,6 +1,6 @@
-import { StyleSheet, TextInput, Modal, SafeAreaView, ActivityIndicator} from 'react-native'
+import { StyleSheet, TextInput, Modal, SafeAreaView, ActivityIndicator, Pressable} from 'react-native'
 import { Link, useRouter } from 'expo-router'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FontAwesome, Ionicons, MaterialCommunityIcons} from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 //Themed views
@@ -71,6 +71,8 @@ const WatcherRegister1 = () => {
 
     const [progress, setProgress] = useState(0)
 
+    const [watchers, setWatchers] = useState([])
+
     const selectedidClick = () => {
         setSelectedId
     }
@@ -78,6 +80,14 @@ const WatcherRegister1 = () => {
      const cancel =  () => {
         setVisible(false)
         router.replace("/")
+    }
+
+    useEffect(() => {
+        getWatcher()
+    }, [])
+
+    const getWatcher = () => {
+        getWatchers().get('/').then(response => setWatchers(response.data)).catch(error => console.log('An error occurred' + error))
     }
 
     const handleCheck = (value) => {
@@ -97,6 +107,13 @@ const WatcherRegister1 = () => {
 
     const submitNow = async () => {
          try{
+
+            watchers.map((w) => {
+                if(email == w.email){
+                   setmodalText("Email Already Exist")
+                   setvisible2(true)
+                }
+            })
 
             if(firstname === ""){
                 setmodalText("First name is required")
@@ -138,6 +155,8 @@ const WatcherRegister1 = () => {
                         
                         setvisible1(false)
                         await AsyncStorage.setItem("email", email)
+                        await AsyncStorage.setItem("fname", firstname)
+                        await AsyncStorage.setItem("lname", lastname)
                         
                         let dob = day + '-' + month + '-' + year
                         gender == '1' ? setgender('Male') : setgender('Female')
@@ -147,17 +166,17 @@ const WatcherRegister1 = () => {
                             router.push("/watcher_register2")
                         })
                         .catch(function(error) {
-                            console.log('An error occurred ' + error.message)
+                            console.log('An error occurred 1' + error.message)
                         })
 
                     }catch(error){
-                        console.log("An error has occurred ", error)
+                        console.log("An error has occurred 2", error)
                     }
                 }, 3000)
             }
 
         }catch(error){
-            console.log("An error has occurred")
+            console.log("An error has occurred 3")
         }
 
     }
@@ -313,9 +332,9 @@ const WatcherRegister1 = () => {
                 />
 
                 <ThemedText style={[styles.text1]}> I agree to the </ThemedText>
-                <Link href="">
+                <Pressable onPress={() => router.push("/terms")}>
                     <ThemedText style={[styles.text2]}>Terms of Use. </ThemedText>
-                </Link>
+                </Pressable>
             </ThemedView>
         </ThemedCard>
                    

@@ -162,7 +162,7 @@ const update = () => {
         </ThemedView>
 
 
-        <ThemedHeader>QUICK WATCH1</ThemedHeader>
+        <ThemedHeader>QUICK WATCH</ThemedHeader>
 
         <Spacer height={40} />
 
@@ -367,6 +367,9 @@ const styles = StyleSheet.create({
     },
     errorText: {
         backgroundColor: '#ffffff',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: '#000',
         width: 240,
         height: 100,
         borderRadius: 10,

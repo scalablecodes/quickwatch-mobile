@@ -1,4 +1,4 @@
-import { Image, ScrollView, StyleSheet, View } from 'react-native'
+import { Image, ImageBackground, ScrollView, StyleSheet, TextInput, View } from 'react-native'
 import ThemedView from '../../components/ThemedView'
 import img1 from '../../assets/images/mother_change.jpg'
 import Spacer from '../../components/Spacer'
@@ -11,6 +11,7 @@ import { MenuProvider } from 'react-native-popup-menu'
 import { useState } from 'react'
 import AnimatedCarousel from '../../components/AnimatedCarousel'
 import AnimatedCarousel2 from '../../components/AnimatedCarousel2'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const MotherHome = () => {
 
@@ -18,8 +19,16 @@ const MotherHome = () => {
 
   const [view, setView] = useState(false)
 
+  const [zipcode, setzipcode] = useState("")
+
   const viewmore = () => {
     setView(true)
+  }
+
+  const opensearch = async () => {
+    await AsyncStorage.removeItem("active_id")
+    await AsyncStorage.setItem("zipcode", zipcode)
+    router.push("/active_home")
   }
 
   return (
@@ -42,25 +51,39 @@ const MotherHome = () => {
 
         <Spacer height={5} />
 
-        <Image 
-            style={[styles.img, {width: '100%', height: 300}]}
+        <ImageBackground 
+            style={[styles.img1, {width: '100%', height: 380}]}
             source={img1}
-        />
+        >
+            <Spacer height={150} />
+            <TextInput  
+                value={zipcode}
+                style={styles.textInput} 
+                placeholder='ZIP CODE' 
+                onChangeText={(zip) => setzipcode(zip)}
+            />
+            <Spacer height={40} />
+            <ThemedButton
+                style={[styles.btn, {width: 140, height: 45}]} 
+                onPress={() => opensearch()}
+            >
+                <ThemedText style={[styles.btn_text]}>Search</ThemedText>
+            </ThemedButton>
+            
+        </ImageBackground>
 
-        <Spacer height={30} />
-
-        <ThemedButton 
+        {/*<ThemedButton 
             style={[styles.btn]} 
             onPress={() => router.push("/choose_plan")}
         >
             <ThemedText style={[styles.btn_text]}>View Plan</ThemedText>
-        </ThemedButton>
+        </ThemedButton>*/}
 
         <Spacer height={30} />
 
         <AnimatedCarousel2 />
        
-        <Spacer height={40} />
+        <Spacer height={30} />
 
         <ThemedView style={[styles.notes]}>
             <ThemedText style={[styles.noteSideHeader]}>Quick Watch Articles</ThemedText>
@@ -166,6 +189,16 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 400,
         color: '#ffffff'
+    },
+    textInput: {
+        height: 45,
+        backgroundColor: '#fff',
+        padding: 10,
+        marginHorizontal: 40,
+        borderRadius: 13,
+        borderWidth: 2,
+        borderStyle: 'solid',
+        borderColor: '#000'
     },
     notes: {
         paddingHorizontal: 20

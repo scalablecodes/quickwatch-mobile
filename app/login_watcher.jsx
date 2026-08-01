@@ -57,7 +57,7 @@ const LoginWatcher = () => {
                     await AsyncStorage.setItem("id", JSON.stringify(watcher.id))
                     await AsyncStorage.setItem("email", email)
                     await AsyncStorage.setItem("about", watcher.about)
-                    await AsyncStorage.setItem("picture", watcher.picture)
+                   // await AsyncStorage.setItem("picture", watcher.picture)
                     router.replace("/watcher_home")
             }else{
                 setmodalText("Invalid username or password")
@@ -112,6 +112,9 @@ const LoginWatcher = () => {
                     onChangeText={(pass) => setPassword(pass)}
                 />
             </KeyboardAvoidingView>
+
+            <ThemedText onPress={() => router.push("/forgot_watcher")} style={[styles.bottom_text,{color: '#03097E'}]}>Forgot Password Here</ThemedText>
+
         </ThemedCard>
 
         <Spacer />
@@ -128,11 +131,7 @@ const LoginWatcher = () => {
         <Spacer height={20} />
 
       <ThemedView style={[]}>
-        {/*<ThemedText style={styles.bottom_text}>
-        </ThemedText>*/}
-        {/*<Link style={{}} href={router.push("/forgot")}>*/}
           <ThemedText onPress={() => router.push("/login")} style={[styles.bottom_text,{color: '#03097E'}]}>Care Seeker Login</ThemedText>
-        {/*</Link>*/}
       </ThemedView>
 
     </ThemedView>

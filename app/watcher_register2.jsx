@@ -1,9 +1,10 @@
-import { SafeAreaView, ActivityIndicator, Pressable, StyleSheet, Text, TextInput, Image, Modal, KeyboardAvoidingView, Platform } from 'react-native'
+import { SafeAreaView, ActivityIndicator, Pressable, StyleSheet, Text, TextInput, Image, Modal, KeyboardAvoidingView, Platform, Linking } from 'react-native'
 import { useRouter } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker';
 import { useEffect, useMemo } from 'react';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 //Themed views
 
 import ThemedView from '../components/ThemedView'
@@ -18,6 +19,9 @@ import { useState } from 'react'
 import { Dropdown } from 'react-native-element-dropdown'
 import KeyboardAvoidingContainer from '../components/KeyboardAvoidingContainer'
 import { getWatchers } from './API';
+
+import { STRIPE_SECRET_KEY } from "./API"
+import { initStripe } from '@stripe/stripe-react-native';
 
 const WatcherRegister2 = () => {
 
@@ -65,6 +69,8 @@ const WatcherRegister2 = () => {
 
   const [modalTxt, setmodalText] = useState("")
 
+  const [modalTxt3, setmodalText3] = useState("")
+
   const [image, setImage] = useState(null);
 
   const [picture, setPicture] = useState("")
@@ -73,13 +79,31 @@ const WatcherRegister2 = () => {
 
   const [visible1, setvisible1] = useState(false)
 
+  const [visible3, setvisible3] = useState(false)
+
   const [watchers, setWatchers] = useState([])
 
   const [email, setEmail] = useState("")
 
-  useEffect(() => {
-        getAllWatchers()
+  const [fname, setFname] = useState("")
+
+  const [lname, setLname] = useState("")
+
+    useEffect(() => {
+          getAllWatchers();
     }, [])
+
+    useEffect(() => {
+        const initializeStripe = async () => {
+            await initStripe({
+                publishableKey: 'pk_test_51SlNMrEdQjWzdJLNju9XE4FFBKLj55yNXAbWlYAIOsRhHIDLrIKl5CVc9QwePvGkkzV1UwD9nsEbq4lDZU502cuZ00uKG1yLOh'
+               // publishableKey: 'pk_test_51TIST0AM7HNUwbaaxHW79c5EaMM6I2bwhY0jVh6VECGWIJIU9VPqk1fbV081GmPF2WPXXHQoqDXgocBLxNtjAFYO0037owp6uy'
+            });
+        };
+        initializeStripe();
+        //createConnectedAccount();
+        //deleteaccount();
+    },[])
 
     const getAllWatchers = async () => {
         getWatchers().get("/")
@@ -88,6 +112,12 @@ const WatcherRegister2 = () => {
 
         let em = await AsyncStorage.getItem("email")
         setEmail(em)
+
+        let fn = await AsyncStorage.getItem("fname")
+        setFname(fn)
+
+        let ln = await AsyncStorage.getItem("lname")
+        setLname(ln)
     }
 
   const pickImage = async () => {
@@ -167,7 +197,7 @@ const WatcherRegister2 = () => {
             setmodalText("About me is required")
             setvisible2()
         }else if(about.length < 69){
-            setmodalText("Minimum of 70 characters")
+            setmodalText("Minimum of 70 characters about you")
             setvisible2()
         }/*else if(cpr === "false" && firstaid === "false"){
             setmodalText("Select certification")
@@ -193,7 +223,14 @@ const WatcherRegister2 = () => {
                     let id = watcher.id
                     let items = {state, city, skills, about, hour_rate, picture, cpr, firstaid, backcheck}
                     getWatchers().patch(`/${id}/`, items)
-                    router.push("/watcher_home")
+                    .then(() => {
+                        //createConnectedAccount()
+                        //router.push("/watcher_home")
+                        setvisible3(true)
+                    })
+                    .catch(function(error){
+                        console.log(error.toJSON())
+                    })
                     
                 } catch (error) {
                     console.log('An error has occurred' + error)
@@ -202,8 +239,97 @@ const WatcherRegister2 = () => {
         }
   }
 
+    const createConnectedAccount = async() => {
+        try{
+        const response = await fetch('https://api.stripe.com/v1/accounts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${STRIPE_SECRET_KEY}`
+          },
+          body: 'type=express&email='+email+'&capabilities[card_payments][requested]=true&capabilities[transfers][requested]=true'
+          
+        });
+    
+        if (!response.ok) {
+          // Handle API errors (e.g., invalid key, bad request)
+          const errorData = await response.json();
+          throw new Error(`Stripe API error: ${errorData.error.message}`);
+        }
+    
+        const account = await response.json();
+        console.log('account created :', account);
+        //update(customer.id)
+        onboarding(account.id)
+        //await AsyncStorage.setItem("cust_id", customer.id);
+    
+      } catch (error) {
+        console.error('Error creating Stripe account:', error);
+        throw error;
+      }
+      
+      }
+    
+      const deleteaccount = async() => {
+        try{
+        const response = await fetch('https://api.stripe.com/v1/accounts/acct_1TQSwkAM7HqIQ1IB', {
+          method: 'DELETE',
+          headers: {
+            //'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${STRIPE_SECRET_KEY}`
+            
+          },
+        });
+    
+        const deleted = await response.json();
+        console.log('account deleted :', deleted.deleted);
+    
+        }catch (error) {
+          console.error('Error deleting Stripe account:', error);
+          throw error;
+        }
+      }
+    
+      const onboarding = async(account_id) => {
+        try{
+        const response = await fetch('https://api.stripe.com/v1/account_links', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${STRIPE_SECRET_KEY}`
+          },
+          body: `account=${account_id}&refresh_url=https://quickwatchs.com&return_url=https://quickwatchs.com&type=account_onboarding`
+        });
+    
+        if (!response.ok) {
+          // Handle API errors (e.g., invalid key, bad request)
+          const errorData = await response.json();
+          throw new Error(`Stripe API error: ${errorData.error.message}`);
+        }
+    
+        const account = await response.json();
+        console.log('account created :', account);
+        //openUrl(account.url)
+        Linking.openURL(account.url)
+        //update(customer.id)
+        //await AsyncStorage.setItem("cust_id", customer.id);
+    
+      } catch (error) {
+        console.error('Error onboarding Stripe account:', error);
+        throw error;
+      }
+      
+      }
+    
+      const openUrl = async (url) => {
+        const supported = await Linking.canOpenURL(url);
+        if (supported) {
+          await Linking.openURL(url);
+        } else {
+          console.log("Don't know how to open URI: " + url);
+        }
+      };
   
-
   return (
     <KeyboardAvoidingContainer>
     <ThemedView>
@@ -432,6 +558,35 @@ const WatcherRegister2 = () => {
                 <MaterialCommunityIcons color="red" name='cancel' size={40} />
                 <ThemedText style={[styles.loading_text, {fontSize: 14}]}>{modalTxt}</ThemedText>
                 </ThemedView>
+        </Modal>
+         <Modal
+            transparent
+            visible={visible3}
+            animationType='none'
+        >
+            <ThemedView style={[styles.errorText, {height: 190}]}>
+            <FontAwesome  
+                color="#000000"
+                name='times' 
+                size={25} 
+                style={{alignSelf: 'flex-end'}}
+                    onPress={() => {
+                        setvisible3(false)
+                        router.push("/watcher_home")
+                    }}
+                />
+                <MaterialIcons color={Colors.primary} name='verified-user' size={40} />
+                <ThemedText style={[styles.loading_text, {fontSize: 14}]}>Continue to set up payment information</ThemedText>
+                <Spacer height={20} />
+                <ThemedView style={{flexDirection: 'row', justifyContent:'space-between', alignItems: 'center', width: 180}}>
+                    <ThemedButton style={[styles.btn, {width: 80}]} onPress={createConnectedAccount}>
+                        <ThemedText style={[styles.btn_text]}>Yes</ThemedText>
+                    </ThemedButton>
+                    <ThemedButton style={[styles.btn, {width: 80}]} onPress={() => router.push("/watcher_home")}>
+                        <ThemedText style={[styles.btn_text]}>No</ThemedText>
+                    </ThemedButton>
+                </ThemedView>
+            </ThemedView>
         </Modal>
 
 

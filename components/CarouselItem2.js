@@ -22,7 +22,7 @@ export default function CarouselItem2(props)
     },[watchers])
 
     const getAllWatchers = () => {
-        getWatchers().get("/").then(response => setwatchers(response.data))
+        getWatchers().get("/").then(response => setwatchers(response.data.filter(w => w.status === true)))
         .catch(error => console.log('An error has occurred ' + error))
     }
 
@@ -63,8 +63,10 @@ export default function CarouselItem2(props)
 
                         <ThemedButton onPress={async() => {
                             try{
+                                await AsyncStorage.removeItem("zipcode")
                                 await AsyncStorage.setItem("active_id", JSON.stringify(w.id))
-                                router.push("/view_profile")
+                               // router.push("/view_profile")
+                               router.push("/active_home")
 
                             }catch(error){
                                 console.log('An error has occurred' + error)
@@ -104,6 +106,7 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: '#9FAEA4',
         height: 300,
+        //height: 240,
         borderRadius: 8,
         width: '48%',
         marginLeft: 10,

@@ -145,7 +145,7 @@ const NavigationWatcher = () => {
               <FontAwesome  
                 color="#000000"
                 name='times' 
-                size={15} 
+                size={25} 
                 style={{alignSelf: 'flex-end'}}
                 onPress={() => setvisible2(false)}
               />
@@ -162,7 +162,7 @@ const NavigationWatcher = () => {
               <FontAwesome  
                 color="#000000"
                 name='times' 
-                size={15} 
+                size={25} 
                 style={{alignSelf: 'flex-end'}}
                 onPress={() => setvisible1(false)}
               />

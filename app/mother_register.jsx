@@ -1,4 +1,4 @@
-import { ActivityIndicator, KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, KeyboardAvoidingView, Modal, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import { Link, useNavigation, useRouter } from 'expo-router'
 
 //Themed views
@@ -17,6 +17,7 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@e
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import KeyboardAvoidingContainer from '../components/KeyboardAvoidingContainer'
 import getUsers from './API'
+
 
 const MotherRegister = () => {
 
@@ -110,6 +111,8 @@ const MotherRegister = () => {
                     try{
                         setvisible1(false)
                         await AsyncStorage.setItem("email", email)
+                        await AsyncStorage.setItem("fname", firstname)
+                        await AsyncStorage.setItem("lname", lastname)
 
                         let items = {firstname, lastname, email, password, zipcode}
                         getUsers().post('/', items)
@@ -235,9 +238,9 @@ const MotherRegister = () => {
                 />
 
                 <ThemedText style={[styles.text1]}> I agree to the </ThemedText>
-                <Link href="">
+                <Pressable onPress={() => router.push("/terms")}>
                     <ThemedText style={[styles.text2]}>Terms of Use. </ThemedText>
-                </Link>
+                </Pressable>
 
             </ThemedView>
 

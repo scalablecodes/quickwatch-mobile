@@ -3,6 +3,8 @@ import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import * as ImagePicker from 'expo-image-picker';
 import * as Progress from 'react-native-progress'
+import { initStripe } from '@stripe/stripe-react-native';
+
 
 //Themed views
 
@@ -17,6 +19,7 @@ import { Dropdown } from 'react-native-element-dropdown'
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getUsers from './API';
+import { STRIPE_SECRET_KEY } from './API';
 
 
 const data0 = [
@@ -34,12 +37,15 @@ const MotherRegister2 = () => {
     const [city, setcity_location] = useState("")
     const [image, setImage] = useState(null);
     const [picture, setPicture] = useState("");
+    //let picture = ''
 
 
 
     const [visible2, setvisible2] = useState(false)
 
     const [visible1, setvisible1] = useState(false)
+
+    const [visible3, setvisible3] = useState(false)
 
     const [modalTxt, setmodalText] = useState("")
 
@@ -49,8 +55,22 @@ const MotherRegister2 = () => {
 
     const [email, setEmail] = useState("")
 
+    const [fname, setFname] = useState("")
+
+    const [lname, setLname] = useState("")
+
+    const [customer, setCustomer] = useState("")
+
     useEffect(() => {
-        getAllUsers()
+        const initializeStripe = async () => {
+            await initStripe({
+                publishableKey: 'pk_test_51SlNMrEdQjWzdJLNju9XE4FFBKLj55yNXAbWlYAIOsRhHIDLrIKl5CVc9QwePvGkkzV1UwD9nsEbq4lDZU502cuZ00uKG1yLOh'
+        // publishableKey: 'pk_test_51TIST0AM7HNUwbaaxHW79c5EaMM6I2bwhY0jVh6VECGWIJIU9VPqk1fbV081GmPF2WPXXHQoqDXgocBLxNtjAFYO0037owp6uy'
+
+            });
+        };
+        initializeStripe();
+        getAllUsers();
     }, [])
 
     const getAllUsers = async () => {
@@ -60,6 +80,12 @@ const MotherRegister2 = () => {
 
         let em = await AsyncStorage.getItem("email")
         setEmail(em)
+
+        let fn = await AsyncStorage.getItem("fname")
+        setFname(fn)
+
+        let ln = await AsyncStorage.getItem("lname")
+        setLname(ln)
     }
 
   const router = useRouter()
@@ -68,26 +94,43 @@ const MotherRegister2 = () => {
 
   const pickImage = async () => {
     try{
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images', 'videos'],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images', 'videos'],
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+        });
 
-    //console.log(result);
+        //console.log(result);
 
-    if (!result.canceled) {
-        setImage(result.assets[0].uri)
-        let newfile = {
-            uri: result.assets[0].uri, 
-            type: `test/${result.assets[0].uri.split('.')[1]}`,
-            name: `test.${result.assets[0].uri.split('.')[1]}`
+        if (!result.canceled) {
+            setvisible3(true)
+            setImage(result.assets[0].uri)
+            let newfile = {
+                uri: result.assets[0].uri, 
+                type: `test/${result.assets[0].uri.split('.')[1]}`,
+                name: `test.${result.assets[0].uri.split('.')[1]}`
+            }
+
+            //handleUpload(newfile)
+                const data = new FormData()
+                data.append("file", newfile)
+                data.append("upload_preset", "slakw5ml")
+                data.append("cloud_name", "du3ck2joa")
+
+                fetch('https://api.cloudinary.com/v1_1/du3ck2joa/image/upload', {
+                    method: "post",
+                    body: data
+                }).then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    let url = data.secure_url.toString()
+                    setPicture(url)
+                    setvisible3(false)
+
+                })
         }
-
-        handleUpload(newfile)
-    }
 
         if(about !== "" || city !== "" || state !== ""){
             setProgress(progress + 0.5)
@@ -98,7 +141,7 @@ const MotherRegister2 = () => {
 
   };
 
-  const handleUpload = (image_data) => {
+  /*const handleUpload = (image_data) => {
     const data = new FormData()
     data.append("file", image_data)
     data.append("upload_preset", "slakw5ml")
@@ -113,9 +156,9 @@ const MotherRegister2 = () => {
         let url = data.secure_url.toString()
         setPicture(url)
     })
-  }
+  }*/
 
-  const update = async () => {
+  const update = async (customer) => {
    
     if(about === ""){
         setmodalText("About family is required")
@@ -133,22 +176,117 @@ const MotherRegister2 = () => {
         setmodalText("Select an image")
         setvisible2()
     }else{
-
-        const user = users.filter(u => u.email == email)[0]
-        let id = user.id
-        let items = {about, state, city, picture}
-        setvisible1(true)
-        setTimeout(async () => {
-            setvisible1(false)
-                getUsers().patch(`/${id}/`, items)
-                .then(() => router.push("/mother_home"))
-                .catch(error => console.log('An error has occurred ' + error) )
-        }, 3000)
-    
+        if(picture !== ""){
+            const user = users.filter(u => u.email == email)[0]
+            let id = user.id
+                        
+            let items = {about, state, city, picture, customer}
+            setvisible1(true)
+            setTimeout( () => {
+                setvisible1(false)
+                    getUsers().patch(`/${id}/`, items)
+                    .then(async() => {
+                        router.push("/mother_home")
+                    })
+                    .catch(function(error){
+                        console.log(error.toJSON())
+                    })
+            }, 3000)
+        }
     }
   }
 
+  const createCustomer = async() => {
+    try{
+    const response = await fetch('https://api.stripe.com/v1/customers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Bearer ${STRIPE_SECRET_KEY}`
+      },
+      body: `name=${fname + " " + lname}&email=${email}`
+    });
+
+    if (!response.ok) {
+      // Handle API errors (e.g., invalid key, bad request)
+      const errorData = await response.json();
+      throw new Error(`Stripe API error: ${errorData.error.message}`);
+    }
+
+    const customer = await response.json();
+    console.log('Customer created:', customer);
+    update(customer.id)
+    //await AsyncStorage.setItem("cust_id", customer.id);
+
+  } catch (error) {
+    console.error('Error creating Stripe customer:', error);
+    throw error;
+  }
+  
+  }
+
+  /*const payMethod = async() => {
+    try{
+    const response = await fetch('https://api.stripe.com/v1/payment_methods', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Bearer ${STRIPE_SECRET_KEY}`
+      },
+      body: 'type=us_bank_account&us_bank_account[account_holder_type]=individual&us_bank_account[account_number]=000123456789&us_bank_account[routing_number]=110000000&billing_details[name]='+fname+ ' ' + lname
+    });
+
+    if (!response.ok) {
+      // Handle API errors (e.g., invalid key, bad request)
+      const errorData = await response.json();
+      throw new Error(`Stripe API error: ${errorData.error.message}`);
+    }
+
+    const payment_method = await response.json();
+    console.log('Pay method created:', payment_method);
+    await AsyncStorage.setItem("paymethod_id", payment_method.id);
+
+
+  } catch (error) {
+    console.error('Error creating Stripe paymethod:', error);
+    throw error;
+  }
+  
+  }*/
+
+    /*const attachPayment = async() => {
+    try{
+    const response = await fetch('https://api.stripe.com/v1/payment_methods/'+payment_id+'/attach', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Bearer ${STRIPE_SECRET_KEY}`
+      },
+      body: 'customer='+customer_id
+    });
+
+    if (!response.ok) {
+      // Handle API errors (e.g., invalid key, bad request)
+      const errorData = await response.json();
+      throw new Error(`Stripe API error: ${errorData.error.message}`);
+    }
+
+    const payment_attached = await response.json();
+    console.log('Pay method attached:', payment_method);
+   // await AsyncStorage.setItem("paymethod_id", payment_method.id);
+
+    return payment_attached;
+
+  } catch (error) {
+    console.error('Error attaching Stripe paymethod:', error);
+    throw error;
+  }
+  
+  }*/
+
+  
   return (
+    
     <ScrollView style={styles.container}>
     <ThemedView>
 
@@ -242,7 +380,7 @@ const MotherRegister2 = () => {
 
         <ThemedButton
             style={[styles.btn]}
-                onPress={() => update()}
+                onPress={() => createCustomer()}
             >
                 <ThemedText style={styles.btn_text}>UPDATE</ThemedText>
         </ThemedButton>
@@ -255,6 +393,18 @@ const MotherRegister2 = () => {
                 <ActivityIndicator size="large" color={Colors.primary} /> 
                     <ThemedText style={styles.loading_text}>
                         Please wait...
+                    </ThemedText>
+            </SafeAreaView>
+        </Modal>
+        <Modal 
+            animationType='none'
+            transparent
+            visible={visible3}
+        >
+            <SafeAreaView style={styles.modal_loading}>                    
+                <ActivityIndicator size="large" color={Colors.primary} /> 
+                    <ThemedText style={styles.loading_text}>
+                        uploading image...
                     </ThemedText>
             </SafeAreaView>
         </Modal>
