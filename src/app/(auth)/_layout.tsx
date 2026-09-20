@@ -13,7 +13,8 @@ const sheet = {
 export default function AuthLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="welcome" />
+      {/* Dark hero in both schemes. */}
+      <Stack.Screen name="welcome" options={{ statusBarStyle: 'light' }} />
       <Stack.Screen name="login" />
       <Stack.Screen name="register" />
       <Stack.Screen name="verify-email" />

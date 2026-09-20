@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { SessionProvider, useSession } from '@/modules/auth/session';
@@ -50,7 +49,6 @@ export default function RootLayout() {
             <PaymentsProvider>
               <SessionProvider>
                 <ToastProvider>
-                  <StatusBar style={isDark ? 'light' : 'dark'} />
                   <Root />
                 </ToastProvider>
               </SessionProvider>
@@ -78,10 +76,12 @@ function Root() {
  */
 function RootStack() {
   const { signedIn, active } = useSession();
+  const isDark = useColorScheme() === 'dark';
   usePushRegistration(signedIn && active);
 
+  // Status bar style is per screen (UIViewControllerBasedStatusBarAppearance); default to the scheme.
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack screenOptions={{ headerShown: false, statusBarStyle: isDark ? 'light' : 'dark' }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="terms" />
       <Stack.Protected guard={!signedIn}>

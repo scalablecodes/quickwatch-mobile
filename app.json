@@ -12,7 +12,8 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.macdaniel2026.quickwatch",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIViewControllerBasedStatusBarAppearance": true
       }
     },
     "android": {
