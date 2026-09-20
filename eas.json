@@ -7,18 +7,30 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "channel": "development"
+      "channel": "development",
+      "credentialsSource": "local"
     },
     "preview": {
       "distribution": "internal",
-      "channel": "preview"
+      "channel": "preview",
+      "credentialsSource": "local"
     },
     "production": {
       "autoIncrement": true,
-      "channel": "production"
+      "channel": "production",
+      "android": {
+        "credentialsSource": "local"
+      },
+      "ios": {
+        "credentialsSource": "remote"
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "bundleIdentifier": "com.macdaniel2026.quickwatch"
+      }
+    }
   }
 }

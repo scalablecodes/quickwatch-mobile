@@ -98,7 +98,7 @@ const LoginWatcher = () => {
                 <TextInput  
                     value={email}
                     style={styles.textInput} 
-                    placeholder='Email' 
+                    placeholder='Email' placeholderTextColor="#6B6B6B" 
                     onChangeText={(em) => setEmail(em)}
                 />
             </KeyboardAvoidingView>
@@ -108,7 +108,7 @@ const LoginWatcher = () => {
                     value={password}
                     secureTextEntry={true} 
                     style={styles.textInput} 
-                    placeholder='Password' 
+                    placeholder='Password' placeholderTextColor="#6B6B6B" 
                     onChangeText={(pass) => setPassword(pass)}
                 />
             </KeyboardAvoidingView>

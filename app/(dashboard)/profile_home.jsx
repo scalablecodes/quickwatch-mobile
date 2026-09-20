@@ -208,7 +208,7 @@ const update = () => {
                 style={[styles.textInput, styles.text]} 
                 textAlignVertical='top'
                 multiline={true}
-                placeholder='Tell us about your family'
+                placeholder='Tell us about your family' placeholderTextColor="#6B6B6B"
                 value={about} 
                 onChangeText={(tell) => setTellus(tell)}
             />

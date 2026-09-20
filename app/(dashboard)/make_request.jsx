@@ -247,7 +247,7 @@ const MakeRequest = () => {
                     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
                     <TextInput
                         style={[styles.text_style, styles.textFont]}
-                        placeholder='11:00 AM'
+                        placeholder='11:00 AM' placeholderTextColor="#6B6B6B"
                         onChangeText={(start) => {
                             setStartTime(start)}
                         }
@@ -263,7 +263,7 @@ const MakeRequest = () => {
                     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
                     <TextInput
                         style={[styles.text_style, styles.textFont]}
-                        placeholder='02:00 PM'
+                        placeholder='02:00 PM' placeholderTextColor="#6B6B6B"
                         onChangeText={(end) => setEndTime(end)}
                         value={endTime}
                     />
@@ -368,7 +368,7 @@ const MakeRequest = () => {
                             onChangeText={(addr) => setaddress(addr)}
                             value={address}
                             enablesReturnKeyAutomatically={true}
-                            placeholder='Street, City & State'
+                            placeholder='Street, City & State' placeholderTextColor="#6B6B6B"
                             multiline={true}
                         />
                     </KeyboardAvoidingView>
@@ -399,7 +399,7 @@ const MakeRequest = () => {
                     <TextInput 
                         style={[styles.textInput, styles.text]} 
                         textAlignVertical='top'
-                        placeholder='Share what you need the WATCHER to do......' 
+                        placeholder='Share what you need the WATCHER to do......' placeholderTextColor="#6B6B6B" 
                         onChangeText={(role) => setWatcherRole(role)}
                         value={watcher_role}
                         multiline={true}

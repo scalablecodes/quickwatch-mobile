@@ -308,7 +308,7 @@ const ChatWatcher1 = () => {
                 style={[styles.textInput, styles.text, {marginHorizontal: 10, padding: 10}]} 
                 textAlignVertical='top'
                 multiline={true}
-                placeholder='Type'
+                placeholder='Type' placeholderTextColor="#6B6B6B"
                 value={chat}
                 onChangeText={(ch) => setchat(ch)}
             />

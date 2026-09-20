@@ -151,7 +151,7 @@ const CardDetails = () => {
                         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} >
                             <ThemedText style={[styles.input_text]}>First Name</ThemedText>
                             <TextInput
-                                placeholder=""
+                                placeholder="" placeholderTextColor="#6B6B6B"
                                 value={firstname}
                                 onChangeText={(fn) => setfirstname(fn)}
                                 style={[styles.textInput, {backgroundColor: '#FFF'}]}
@@ -163,7 +163,7 @@ const CardDetails = () => {
                         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} >
                             <ThemedText style={[styles.input_text]}>Last Name</ThemedText>
                             <TextInput
-                                placeholder=""
+                                placeholder="" placeholderTextColor="#6B6B6B"
                                 value={lastname}
                                 onChangeText={(ln) => setlastname(ln)}
                                 style={[styles.textInput, {backgroundColor: '#FFF'}]}
@@ -175,7 +175,7 @@ const CardDetails = () => {
                         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} >
                             <ThemedText style={[styles.input_text]}>Address 1</ThemedText>
                             <TextInput
-                                placeholder=""
+                                placeholder="" placeholderTextColor="#6B6B6B"
                                 value={address1}
                                 onChangeText={(addr1) => setaddress1(addr1)}
                                 style={[styles.textInput, {backgroundColor: '#FFF'}]}
@@ -187,7 +187,7 @@ const CardDetails = () => {
                         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} >
                             <ThemedText style={[styles.input_text]}>Address 2 (optional)</ThemedText>
                             <TextInput
-                                placeholder=""
+                                placeholder="" placeholderTextColor="#6B6B6B"
                                 value={address2}
                                 onChangeText={(addr2) => setaddress2(addr2)}
                                 style={[styles.textInput, {backgroundColor: '#FFF'}]}
@@ -238,7 +238,7 @@ const CardDetails = () => {
                                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{width: '45%'}} >
                                     <ThemedText style={[styles.input_text]}>City</ThemedText>
                                     <TextInput
-                                        placeholder=""
+                                        placeholder="" placeholderTextColor="#6B6B6B"
                                         value={city}
                                         onChangeText={(ct) => setcity(ct)}
                                         style={[styles.textInput, {backgroundColor: '#FFF'}]}
@@ -247,7 +247,7 @@ const CardDetails = () => {
                                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{width: '45%'}} >
                                     <ThemedText style={[styles.input_text]}>Zip Code</ThemedText>
                                     <TextInput
-                                        placeholder=""
+                                        placeholder="" placeholderTextColor="#6B6B6B"
                                         value={zipcode}
                                         onChangeText={(zp) => setzipcode(zp)}
                                         style={[styles.textInput, {backgroundColor: '#FFF'}]}
@@ -261,7 +261,7 @@ const CardDetails = () => {
                                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{width: '45%'}} >
                                     <ThemedText style={[styles.input_text]}>Mobile</ThemedText>
                                     <TextInput
-                                        placeholder=""
+                                        placeholder="" placeholderTextColor="#6B6B6B"
                                         value={mobile}
                                         onChangeText={(mb) => setmobile(mb)}
                                         style={[styles.textInput, {backgroundColor: '#FFF'}]}
@@ -281,7 +281,7 @@ const CardDetails = () => {
                         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} >
                             <ThemedText style={[styles.input_text]}>Card Number</ThemedText>
                             <TextInput
-                                placeholder="****   ****   ****   ****"
+                                placeholder="****   ****   ****   ****" placeholderTextColor="#6B6B6B"
                                 value={cardnumber}
                                 onChangeText={(cn) => setcardnumber(cn)}
                                 style={[styles.textInput, {textAlign: 'center', backgroundColor: '#FFF', borderWidth: 1, borderStyle: 'solid', borderColor: '#000'}]}
@@ -294,7 +294,7 @@ const CardDetails = () => {
                                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{width: '45%'}} >
                                     <ThemedText style={[styles.input_text]}>Expiration Date</ThemedText>
                                     <TextInput
-                                        placeholder="mm/yyyy"
+                                        placeholder="mm/yyyy" placeholderTextColor="#6B6B6B"
                                         value={expirationdate}
                                         onChangeText={(exp) => setexpirationdate(exp)}
                                         style={[styles.textInput, {textAlign: 'center', backgroundColor: '#FFF' , borderWidth: 1, borderStyle: 'solid', borderColor: '#000'}]}
@@ -303,7 +303,7 @@ const CardDetails = () => {
                                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{width: '45%'}} >
                                     <ThemedText style={[styles.input_text, {textAlign: 'center'}]}>CVV</ThemedText>
                                     <TextInput
-                                        placeholder="***"
+                                        placeholder="***" placeholderTextColor="#6B6B6B"
                                         value={cvv}
                                         onChangeText={(cv) => setcvv(cv)}
                                         style={[styles.textInput, {textAlign: 'center', backgroundColor: '#FFF' , borderWidth: 1, borderStyle: 'solid', borderColor: '#000'}]}

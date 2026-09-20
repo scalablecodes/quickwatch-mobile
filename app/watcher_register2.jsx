@@ -392,7 +392,7 @@ const WatcherRegister2 = () => {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <TextInput 
             style={[styles.textInput, {height: 80}]} 
-            placeholder='Skills' 
+            placeholder='Skills' placeholderTextColor="#6B6B6B" 
             value={skills}
             multiline={true}
             enablesReturnKeyAutomatically={true}
@@ -405,7 +405,7 @@ const WatcherRegister2 = () => {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <TextInput 
             style={[styles.textInput, {height: 80}]} 
-            placeholder='About Me...' 
+            placeholder='About Me...' placeholderTextColor="#6B6B6B" 
             value={about}
             multiline={true}
             enablesReturnKeyAutomatically={true}
@@ -509,7 +509,7 @@ const WatcherRegister2 = () => {
         <Spacer height={20} />
 
         <TextInput
-            placeholder='$'
+            placeholder='$' placeholderTextColor="#6B6B6B"
             style={[styles.dollar_input, styles.dollar_text]}
             value={hour_rate}
             onChangeText={(txt) => sethour_rate(txt)}

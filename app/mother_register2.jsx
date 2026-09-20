@@ -312,7 +312,7 @@ const MotherRegister2 = () => {
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
             <TextInput 
                 style={[styles.textInput, styles.text]} 
-                placeholder='Tell us about your family' 
+                placeholder='Tell us about your family' placeholderTextColor="#6B6B6B" 
                 textAlignVertical='top'
                 value={about}
                 multiline={true}

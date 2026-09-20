@@ -98,7 +98,7 @@ const SupportWatcher = () => {
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
             <TextInput
                 style={[styles.textInput, styles.text]} 
-                placeholder='Type...' 
+                placeholder='Type...' placeholderTextColor="#6B6B6B" 
                 textAlignVertical='top'
                 value={helpText}
                 multiline={true}

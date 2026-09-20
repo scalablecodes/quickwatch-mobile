@@ -55,27 +55,27 @@ const Register2 = () => {
         <Spacer height={20} />
 
         <ThemedCard style={{height: 630, borderWidth: 5, borderColor: Colors.primary, paddingHorizontal: 20, paddingVertical: 40}}>
-            <TextInput style={styles.textInput} placeholder='First Name' />
+            <TextInput style={styles.textInput} placeholder='First Name' placeholderTextColor="#6B6B6B" />
 
             <Spacer height={15} />
 
-            <TextInput style={styles.textInput} placeholder='Last Name' />
+            <TextInput style={styles.textInput} placeholder='Last Name' placeholderTextColor="#6B6B6B" />
 
             <Spacer height={15} />
 
-            <TextInput style={styles.textInput} placeholder='Email' />
+            <TextInput style={styles.textInput} placeholder='Email' placeholderTextColor="#6B6B6B" />
 
             <Spacer height={15} />
 
-            <TextInput style={styles.textInput} placeholder='Password' />
+            <TextInput style={styles.textInput} placeholder='Password' placeholderTextColor="#6B6B6B" />
 
             <Spacer height={15} />
 
-            <TextInput style={styles.textInput} placeholder='Zip Code' />
+            <TextInput style={styles.textInput} placeholder='Zip Code' placeholderTextColor="#6B6B6B" />
 
             <Spacer height={15} />
             
-            <TextInput style={styles.textInput} placeholder='Phone number' />
+            <TextInput style={styles.textInput} placeholder='Phone number' placeholderTextColor="#6B6B6B" />
 
             <Spacer height={15} />
 
@@ -87,15 +87,15 @@ const Register2 = () => {
             <ThemedView style={[styles.section, {justifyContent: 'space-between'}]}>
                 <ThemedView style={[styles.section]}>
                     <TextInput
-                        placeholder='MM'
+                        placeholder='MM' placeholderTextColor="#6B6B6B"
                         style={[styles.text, {width: 40, color: '#000000', fontFamily: 'InriaSerifBold', fontSize: 13, fontWeight: 400}]}
                     />
                     <TextInput
-                        placeholder='DD'
+                        placeholder='DD' placeholderTextColor="#6B6B6B"
                         style={[styles.text, {width: 40, marginLeft: 3, color: '#000000', fontFamily: 'InriaSerifBold', fontSize: 13, fontWeight: 400}]}                   
                      />
                     <TextInput
-                        placeholder='YYYY'
+                        placeholder='YYYY' placeholderTextColor="#6B6B6B"
                         style={[styles.text, {width: 50, marginLeft: 3, color: '#000000', fontFamily: 'InriaSerifBold', fontSize: 13, fontWeight: 400}]}                    />
                 </ThemedView>
 

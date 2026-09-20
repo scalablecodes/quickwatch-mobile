@@ -232,7 +232,7 @@ const WatcherRegister1 = () => {
             
             <TextInput 
                 style={styles.textInput} 
-                placeholder='First Name' 
+                placeholder='First Name' placeholderTextColor="#6B6B6B" 
                 onChangeText={(fn) => setfirstName(fn)}
                 value={firstname}
             />
@@ -241,7 +241,7 @@ const WatcherRegister1 = () => {
 
             <TextInput 
                 style={styles.textInput} 
-                placeholder='Last Name' 
+                placeholder='Last Name' placeholderTextColor="#6B6B6B" 
                 onChangeText={(ln) => setlastName(ln)}
                 value={lastname}
             />
@@ -250,7 +250,7 @@ const WatcherRegister1 = () => {
 
             <TextInput 
                 style={styles.textInput} 
-                placeholder='Email' 
+                placeholder='Email' placeholderTextColor="#6B6B6B" 
                 onChangeText={(em) => setEmail(em)}
                 value={email}
             />
@@ -259,7 +259,7 @@ const WatcherRegister1 = () => {
 
             <TextInput 
                 style={styles.textInput} 
-                placeholder='Password' 
+                placeholder='Password' placeholderTextColor="#6B6B6B" 
                 secureTextEntry={true}
                 onChangeText={(pass) => setPassword(pass)}
                 value={password}
@@ -269,7 +269,7 @@ const WatcherRegister1 = () => {
 
             <TextInput 
                 style={styles.textInput} 
-                placeholder='Zip Code'
+                placeholder='Zip Code' placeholderTextColor="#6B6B6B"
                 onChangeText={(zc) => setzipcode(zc)}
                 value={zipcode} 
             />
@@ -278,7 +278,7 @@ const WatcherRegister1 = () => {
             
             <TextInput 
                 style={styles.textInput} 
-                placeholder='Phone number' 
+                placeholder='Phone number' placeholderTextColor="#6B6B6B" 
                 onChangeText={(ph) => setphone(ph)}
                 value={phoneno} 
             />
@@ -290,19 +290,19 @@ const WatcherRegister1 = () => {
                     <ThemedText style={[styles.text_font]}>Date of Birth</ThemedText>
                     <ThemedView style={[styles.section]}> 
                          <TextInput
-                            placeholder='MM'
+                            placeholder='MM' placeholderTextColor="#6B6B6B"
                             style={[styles.input_date, styles.text_font, {marginLeft: 0}]}
                             onChangeText={(mm) => setmonth(mm)}
                             value={month} 
                         />
                         <TextInput
-                            placeholder='DD'
+                            placeholder='DD' placeholderTextColor="#6B6B6B"
                             style={[styles.input_date, styles.text_font]}
                             onChangeText={(dd) => setday(dd)}
                             value={day} 
                         />
                         <TextInput
-                            placeholder='YYYY'
+                            placeholder='YYYY' placeholderTextColor="#6B6B6B"
                             style={[styles.input_date, styles.text_font]}
                             onChangeText={(yy) => setyear(yy)}
                             value={year} 

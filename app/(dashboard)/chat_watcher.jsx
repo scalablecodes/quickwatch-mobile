@@ -180,7 +180,7 @@ const ChatWatcher = () => {
                     style={[styles.textInput, styles.text]} 
                     textAlignVertical='top'
                     multiline={true}
-                    placeholder='Enter chat'
+                    placeholder='Enter chat' placeholderTextColor="#6B6B6B"
                     value={chat}
                     onChangeText={(ch) => setchat(ch)}
                 />
@@ -266,7 +266,7 @@ const ChatWatcher = () => {
                     style={[styles.textInput, styles.text]} 
                     textAlignVertical='top'
                     multiline={true}
-                    placeholder='Enter chat'
+                    placeholder='Enter chat' placeholderTextColor="#6B6B6B"
                     value={chat}
                     onChangeText={(ch) => setchat(ch)}
                 />

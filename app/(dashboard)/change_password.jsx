@@ -102,7 +102,7 @@ const changePassword = () => {
                 <TextInput
                     value={email}
                     style={styles.textInput} 
-                    placeholder='Email' 
+                    placeholder='Email' placeholderTextColor="#6B6B6B" 
                 />
             </KeyboardAvoidingView>
             <Spacer />
@@ -111,7 +111,7 @@ const changePassword = () => {
                     value={password}
                     secureTextEntry={true} 
                     style={styles.textInput} 
-                    placeholder='Password' 
+                    placeholder='Password' placeholderTextColor="#6B6B6B" 
                     onChangeText={(pass) => setPassword(pass)}
                 />
             </KeyboardAvoidingView>
@@ -121,7 +121,7 @@ const changePassword = () => {
                     value={password1}
                     secureTextEntry={true} 
                     style={styles.textInput} 
-                    placeholder='Confirm Password' 
+                    placeholder='Confirm Password' placeholderTextColor="#6B6B6B" 
                     onChangeText={(pass1) => setPassword1(pass1)}
                 />
             </KeyboardAvoidingView>

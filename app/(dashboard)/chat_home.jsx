@@ -156,7 +156,7 @@ const ChatHome = () => {
                     style={[styles.textInput, styles.text]} 
                     textAlignVertical='top'
                     multiline={true}
-                    placeholder='Enter chat'
+                    placeholder='Enter chat' placeholderTextColor="#6B6B6B"
                     value={chat}
                     onChangeText={(ch) => setchat(ch)}
                 />
@@ -242,7 +242,7 @@ const ChatHome = () => {
                     style={[styles.textInput, styles.text]} 
                     textAlignVertical='top'
                     multiline={true}
-                    placeholder='Enter chat'
+                    placeholder='Enter chat' placeholderTextColor="#6B6B6B"
                     value={chat}
                     onChangeText={(ch) => setchat(ch)}
                 />

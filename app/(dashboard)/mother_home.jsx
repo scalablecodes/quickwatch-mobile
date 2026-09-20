@@ -59,7 +59,7 @@ const MotherHome = () => {
             <TextInput  
                 value={zipcode}
                 style={styles.textInput} 
-                placeholder='ZIP CODE' 
+                placeholder='ZIP CODE' placeholderTextColor="#6B6B6B" 
                 onChangeText={(zip) => setzipcode(zip)}
             />
             <Spacer height={40} />

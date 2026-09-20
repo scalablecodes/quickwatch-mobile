@@ -1,11 +1,11 @@
 {
   "expo": {
-    "scheme": "mother-care",
-    "name": "mother_care",
-    "slug": "mother_care",
+    "scheme": "quick-watch",
+    "name": "Quick Watch",
+    "slug": "mother-care",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/quickwatch.png",
+    "icon": "./assets/appIcon-1024.png",
     "userInterfaceStyle": "light",
     "platforms": [
       "ios",
@@ -13,23 +13,30 @@
     ],
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.macdaniel.quickwatch",
+      "bundleIdentifier": "com.macdaniel2026.quickwatch",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "userInterfaceStyle": "light"
     },
     "android": {
-      "package": "com.macdaniel.quickwatch",
+      "package": "com.quickwatch",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "foregroundImage": "./assets/appIcon-adaptive.png",
+        "backgroundColor": "#6119A1"
+      },
+      "blockedPermissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ],
+      "userInterfaceStyle": "light"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,21 +44,43 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Quick Watch needs access to your photos so you can add a profile picture."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "imageWidth": 260,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "android": {
+            "image": "./assets/splash-android.png",
+            "imageWidth": 200,
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+          }
+        }
+      ]
     ],
     "extra": {
       "router": {
         "origin": false
       },
       "eas": {
-        "projectId": "6ec7a705-ec3d-48e6-bb8c-18e7af9d886c"
+        "projectId": "a345584d-739a-4b14-948e-edd989b60854"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/6ec7a705-ec3d-48e6-bb8c-18e7af9d886c"
-    }
+      "url": "https://u.expo.dev/a345584d-739a-4b14-948e-edd989b60854"
+    },
+    "owner": "abraham-alizor"
   }
 }

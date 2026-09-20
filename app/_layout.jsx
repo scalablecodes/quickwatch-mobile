@@ -10,7 +10,7 @@ SplashScreen.preventAutoHideAsync()
 
 const RootLayout = () => {
 
-  const [loaded] = useFonts({
+  const [loaded, fontError] = useFonts({
     'IrishGrover': require('../assets/fonts/IrishGrover-Regular.ttf'),
     'InriaSerif': require('../assets/fonts/InriaSerif-Regular.ttf'),
     'InriaSerifBold': require('../assets/fonts/InriaSerif-Bold.ttf'),
@@ -21,10 +21,11 @@ const RootLayout = () => {
   });
 
   useEffect(() => {
-    if (loaded) {
+    // hide on error too, otherwise a failed font load leaves the splash up forever
+    if (loaded || fontError) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, fontError]);
 
   const colorScheme = useColorScheme()
 

@@ -72,7 +72,7 @@ const ForgotWatcher = () => {
              <TextInput  
                 value={email}
                 style={styles.textInput} 
-                placeholder='Email Address' 
+                placeholder='Email Address' placeholderTextColor="#6B6B6B" 
                 onChangeText={(em) => setEmail(em)}
             
                         />
@@ -81,7 +81,7 @@ const ForgotWatcher = () => {
                 value={password}
                 secureTextEntry={true} 
                 style={styles.textInput} 
-                placeholder='New Password' 
+                placeholder='New Password' placeholderTextColor="#6B6B6B" 
                 onChangeText={(pass) => setPassword(pass)}
             />
         </ThemedCard>

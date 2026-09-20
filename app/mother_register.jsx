@@ -186,7 +186,7 @@ const MotherRegister = () => {
         <ThemedCard style={[styles.card_box]}>
             <TextInput 
                 style={styles.textInput} 
-                placeholder='First Name' 
+                placeholder='First Name' placeholderTextColor="#6B6B6B" 
                 onChangeText={(fn) => setfirstName(fn)}
                 value={firstname}
             />
@@ -195,7 +195,7 @@ const MotherRegister = () => {
 
             <TextInput 
                 style={styles.textInput} 
-                placeholder='Last Name' 
+                placeholder='Last Name' placeholderTextColor="#6B6B6B" 
                 onChangeText={(ln) => setlastName(ln)}
                 value={lastname}
             />
@@ -204,7 +204,7 @@ const MotherRegister = () => {
 
             <TextInput 
                 style={styles.textInput}
-                placeholder='Email' 
+                placeholder='Email' placeholderTextColor="#6B6B6B" 
                 onChangeText={(em) => setEmail(em)}
                 value={email} 
             />
@@ -213,7 +213,7 @@ const MotherRegister = () => {
 
             <TextInput 
                 style={styles.textInput} 
-                placeholder='Password' 
+                placeholder='Password' placeholderTextColor="#6B6B6B" 
                 secureTextEntry={true}
                 onChangeText={(pass) => setPassword(pass)}
                 value={password}
@@ -223,7 +223,7 @@ const MotherRegister = () => {
         
             <TextInput 
                 style={styles.textInput} 
-                placeholder='Zip Code' 
+                placeholder='Zip Code' placeholderTextColor="#6B6B6B" 
                 onChangeText={(zc) => setzipcode(zc)}
                 value={zipcode}
             />

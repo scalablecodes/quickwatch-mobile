@@ -441,7 +441,7 @@ const ChatAccepted = () => {
                         style={[styles.textInput, styles.text, {borderRadius: 15, backgroundColor: '#fff', marginHorizontal: 10, padding: 10, borderWidth: 4, borderStyle: 'solid', borderColor: '#F5F5F5'}]} 
                         textAlignVertical='top'
                         multiline={true}
-                        placeholder='Message'
+                        placeholder='Message' placeholderTextColor="#6B6B6B"
                         value={chat}
                         onChangeText={(ch) => setchat(ch)}
                     />

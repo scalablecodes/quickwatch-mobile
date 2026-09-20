@@ -32,15 +32,15 @@ const Register3 = () => {
         <Spacer height={10} />
 
         <ThemedCard style={{backgroundColor: '#fff', paddingHorizontal: 20, paddingVertical: 20}}>
-            <TextInput style={styles.textInput} placeholder='Name In Full' />
+            <TextInput style={styles.textInput} placeholder='Name In Full' placeholderTextColor="#6B6B6B" />
 
             <Spacer height={20} />
 
-            <TextInput style={styles.textInput} placeholder='Skills' />
+            <TextInput style={styles.textInput} placeholder='Skills' placeholderTextColor="#6B6B6B" />
 
             <Spacer height={20} />
 
-            <TextInput style={[styles.textInput, {height: 80, borderBottomWidth: 5, borderBottomColor: '#000'}]} placeholder='About Me' />
+            <TextInput style={[styles.textInput, {height: 80, borderBottomWidth: 5, borderBottomColor: '#000'}]} placeholder='About Me' placeholderTextColor="#6B6B6B" />
 
             <Spacer height={20} />
 
