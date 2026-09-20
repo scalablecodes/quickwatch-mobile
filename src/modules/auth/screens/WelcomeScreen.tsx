@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -26,9 +27,16 @@ export function WelcomeScreen() {
   return (
     <Box flex={1} backgroundColor="primaryDark">
       <Image source={hero} style={StyleSheet.absoluteFill} contentFit="cover" />
+      <StatusBar style="light" />
+      {/* Darken the pale top of the photo so the brand row and status bar sit on colour. */}
       <LinearGradient
-        colors={['rgba(21,20,51,0.15)', 'rgba(21,20,51,0.55)', colors.primaryDark]}
-        locations={[0, 0.5, 0.82]}
+        colors={[
+          'rgba(78,15,138,0.75)',
+          'rgba(21,20,51,0.15)',
+          'rgba(21,20,51,0.55)',
+          colors.primaryDark,
+        ]}
+        locations={[0, 0.28, 0.55, 0.82]}
         style={StyleSheet.absoluteFill}
       />
       <Box
