@@ -254,8 +254,8 @@ export function RegisterScreen() {
                 trailingIconAccessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
                 onTrailingIconPress={() => setShowPassword((v) => !v)}
                 autoCapitalize="none"
-                autoComplete="new-password"
-                textContentType="newPassword"
+                autoComplete="off"
+                textContentType="none"
               />
             </Box>
           </Animated.View>

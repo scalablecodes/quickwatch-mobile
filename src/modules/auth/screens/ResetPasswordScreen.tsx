@@ -100,7 +100,8 @@ export function ResetPasswordScreen() {
             trailingIconAccessibilityLabel={show ? 'Hide password' : 'Show password'}
             onTrailingIconPress={() => setShow((v) => !v)}
             autoCapitalize="none"
-            autoComplete="new-password"
+            autoComplete="off"
+            textContentType="none"
           />
           <TextField
             label="Confirm password"
