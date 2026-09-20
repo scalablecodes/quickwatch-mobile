@@ -19,7 +19,7 @@
       "package": "com.quickwatch",
       "adaptiveIcon": {
         "foregroundImage": "./assets/appIcon-adaptive.png",
-        "backgroundColor": "#6119A1"
+        "backgroundColor": "#6F17C1"
       },
       "blockedPermissions": [
         "android.permission.RECORD_AUDIO",
@@ -56,7 +56,7 @@
         "expo-notifications",
         {
           "icon": "./assets/splash-icon.png",
-          "color": "#6119A1"
+          "color": "#6F17C1"
         }
       ],
       [

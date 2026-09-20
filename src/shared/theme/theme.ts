@@ -34,7 +34,8 @@ const theme = createTheme({
     link: Palette.violet01,
     onPrimary: Palette.white,
     onPrimaryMuted: Palette.whiteAlpha70,
-    onAccent: Palette.white,
+    /** Ink on gold — white fails contrast on the secondary colour. */
+    onAccent: Palette.ink01,
 
     // Form fields
     inputBackground: Palette.lightGrey01,
@@ -48,9 +49,9 @@ const theme = createTheme({
     primarySoft: Palette.violet03,
     primaryTint: Palette.violet01Alpha12,
     primaryBorder: Palette.violet01Alpha35,
-    accent: Palette.apricot01,
-    accentLight: Palette.apricot02,
-    accentSoft: Palette.apricot03,
+    accent: Palette.gold01,
+    accentLight: Palette.gold02,
+    accentSoft: Palette.gold03,
 
     // Status
     success: Palette.green01,
@@ -189,7 +190,7 @@ export const darkTheme: Theme = {
     inputBorderFilled: Palette.dmBlack04,
 
     primarySoft: Palette.dmBlack03,
-    primaryTint: 'rgba(139, 99, 240, 0.18)',
+    primaryTint: 'rgba(154, 90, 224, 0.2)',
     accentSoft: Palette.dmBlack03,
     successSoft: 'rgba(18, 166, 110, 0.18)',
     warningSoft: 'rgba(245, 165, 36, 0.18)',

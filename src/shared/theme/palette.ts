@@ -3,20 +3,20 @@
  * to semantic tokens in `theme.ts` so light/dark modes stay consistent.
  */
 export const Palette = {
-  // Brand — iris violet, from the app icon
-  violet01: '#6D3BE0',
-  violet02: '#8B63F0',
-  violet03: '#EFE9FF',
-  violet04: '#4B22B5',
+  // Brand primary — QuickWatch violet #6F17C1
+  violet01: '#6F17C1',
+  violet02: '#9A5AE0',
+  violet03: '#F1E8FB',
+  violet04: '#4E0F8A',
   /** Violet/01 at 12% — selected chips, tinted icon wells. */
-  violet01Alpha12: 'rgba(109, 59, 224, 0.12)',
+  violet01Alpha12: 'rgba(111, 23, 193, 0.12)',
   /** Violet/01 at 35% — focused borders. */
-  violet01Alpha35: 'rgba(109, 59, 224, 0.35)',
+  violet01Alpha35: 'rgba(111, 23, 193, 0.35)',
 
-  // Warmth — apricot accent used for CTAs on imagery and highlights
-  apricot01: '#FF8A5B',
-  apricot02: '#FFB08F',
-  apricot03: '#FFEFE7',
+  // Brand secondary — QuickWatch gold #F9B232, used for accent CTAs and highlights
+  gold01: '#F9B232',
+  gold02: '#FBC966',
+  gold03: '#FEF3DC',
 
   // Ink
   ink01: '#151433',
