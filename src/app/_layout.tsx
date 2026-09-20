@@ -1,5 +1,4 @@
 import { ThemeProvider as RestyleThemeProvider } from '@shopify/restyle';
-import { StripeProvider } from '@stripe/stripe-react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
@@ -9,10 +8,10 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { SessionProvider, useSession } from '@/modules/auth/session';
 import { usePushRegistration } from '@/modules/notifications/use-push-registration';
+import { PaymentsProvider } from '@/shared/components/PaymentsProvider';
 import { SplashOverlay } from '@/shared/components/SplashOverlay';
 import { ToastProvider } from '@/shared/components/Toast';
 import { useColorScheme } from '@/shared/hooks/use-color-scheme';
-import { env } from '@/shared/lib/env';
 import { darkTheme, fontAssets, theme } from '@/shared/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -48,17 +47,14 @@ export default function RootLayout() {
                 border: restyleTheme.colors.border,
               },
             }}>
-            <StripeProvider
-              publishableKey={env.stripePublishableKey}
-              merchantIdentifier="merchant.com.macdaniel2026.quickwatch"
-              urlScheme="quick-watch">
+            <PaymentsProvider>
               <SessionProvider>
                 <ToastProvider>
                   <StatusBar style={isDark ? 'light' : 'dark'} />
                   <Root />
                 </ToastProvider>
               </SessionProvider>
-            </StripeProvider>
+            </PaymentsProvider>
           </ThemeProvider>
         </RestyleThemeProvider>
       </QueryClientProvider>
