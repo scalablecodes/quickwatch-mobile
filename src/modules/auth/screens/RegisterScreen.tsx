@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useMutation } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -22,6 +23,7 @@ import { ScreenHeader } from '@/shared/components/ScreenHeader';
 import { useToast } from '@/shared/components/Toast';
 import { Box, Button, Text, TextField } from '@/shared/components/ui';
 import { errorMessage } from '@/shared/lib/api';
+import { useTheme } from '@/shared/theme';
 
 type Role = Exclude<UserRole, 'Admin'>;
 type Step = 'role' | 'account' | 'details';
@@ -48,6 +50,7 @@ export function RegisterScreen() {
   const router = useRouter();
   const toast = useToast();
   const params = useLocalSearchParams<{ role?: string }>();
+  const { colors } = useTheme();
 
   const [step, setStep] = useState<Step>(
     params.role === 'Mother' || params.role === 'Babysitter' ? 'account' : 'role'
@@ -343,11 +346,7 @@ export function RegisterScreen() {
                   backgroundColor={agreed ? 'primary' : 'transparent'}
                   alignItems="center"
                   justifyContent="center">
-                  {agreed ? (
-                    <Text variant="p12Bold" color="onPrimary">
-                      ✓
-                    </Text>
-                  ) : null}
+                  {agreed ? <Ionicons name="checkmark" size={14} color={colors.onPrimary} /> : null}
                 </Box>
                 <Text variant="p14" color="textSecondary" style={styles.termsText}>
                   I agree to the{' '}
