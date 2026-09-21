@@ -35,7 +35,8 @@
   "submit": {
     "production": {
       "ios": {
-        "bundleIdentifier": "com.macdaniel2026.quickwatch"
+        "bundleIdentifier": "com.macdaniel2026.quickwatch",
+        "ascAppId": "6805101398"
       }
     }
   }
