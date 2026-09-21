@@ -31,7 +31,7 @@ export function HomeHeader() {
           {greeting()},
         </Text>
         <Text variant="h3" numberOfLines={1}>
-          {user?.FirstName} 👋
+          {user?.FirstName}
         </Text>
       </Box>
       <IconButton
