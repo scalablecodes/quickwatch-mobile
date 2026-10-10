@@ -3,6 +3,8 @@ import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
 
+import { pushTokenStorage } from '@/shared/lib/storage';
+
 import { notificationsApi } from './api';
 
 Notifications.setNotificationHandler({
@@ -34,7 +36,11 @@ export function usePushRegistration(enabled: boolean) {
           });
         }
         const { data: token } = await Notifications.getExpoPushTokenAsync();
-        if (!cancelled && token) await notificationsApi.registerDevice(token, Platform.OS);
+        if (!cancelled && token) {
+          await notificationsApi.registerDevice(token, Platform.OS);
+          // Kept so sign-out can de-register this device.
+          await pushTokenStorage.set(token);
+        }
       } catch {
         // Push is best-effort; in-app notifications still work.
       }

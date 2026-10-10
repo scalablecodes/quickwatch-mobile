@@ -27,11 +27,26 @@ export type User = {
   roles?: UserRole[];
   status: AccountStatus;
   emailVerified?: boolean;
+  /** True once at least one device is registered for biometric sign-in. */
+  biometricEnabled?: boolean;
+  biometricDevices?: BiometricDevice[];
   payoutAccountStatus?: 'not_started' | 'pending' | 'enabled';
   notificationPreferences?: NotificationPreferences;
   createdAt?: string;
   updatedAt?: string;
 };
+
+export type BiometricDevice = {
+  deviceId: string;
+  deviceName: string;
+  credentialId?: string;
+  publicKey?: string;
+  lastUsedAt?: string;
+  createdAt?: string;
+};
+
+/** A US state as returned by `/users/states`. */
+export type UsState = { name: string; abbreviation: string };
 
 export type NotificationPreferences = {
   push: boolean;

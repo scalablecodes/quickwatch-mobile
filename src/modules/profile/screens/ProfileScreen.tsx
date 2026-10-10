@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { getStoredCredential } from '@/modules/auth/biometrics';
 import { useSession } from '@/modules/auth/session';
 import { useTabBarInset } from '@/shared/components/AppTabs';
 import {
@@ -28,6 +30,12 @@ export function ProfileScreen() {
   const bottomInset = useTabBarInset();
   const { colors } = useTheme();
   const { user, isBabysitter, signOut } = useSession();
+  const [biometricOn, setBiometricOn] = useState(false);
+
+  useEffect(() => {
+    getStoredCredential().then((c) => setBiometricOn(Boolean(c)));
+  }, []);
+
   if (!user) return null;
 
   const roles = user.roles ?? [user.role];
@@ -156,6 +164,15 @@ export function ProfileScreen() {
               title="Identity verification"
               subtitle="ID and proof of address"
               onPress={() => router.push('/settings/verification')}
+            />
+            <Divider />
+            <ListRow
+              icon="finger-print-outline"
+              title="Biometric sign-in"
+              subtitle={
+                biometricOn ? 'Enabled on this device' : 'Use Face ID or fingerprint to log in'
+              }
+              onPress={() => router.push('/settings/biometric')}
             />
             <Divider />
             <ListRow

@@ -19,6 +19,7 @@ export default function SettingsLayout() {
       <Stack.Screen name="notifications" />
       <Stack.Screen name="support" />
       <Stack.Screen name="switch-role" options={sheet} />
+      <Stack.Screen name="biometric" options={sheet} />
     </Stack>
   );
 }

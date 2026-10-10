@@ -1,10 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, type TextInput } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import { authApi } from '@/modules/auth/api';
+import {
+  biometricLabel,
+  clearStoredCredential,
+  getBiometricKind,
+  getStoredCredential,
+  promptBiometric,
+  type BiometricKind,
+} from '@/modules/auth/biometrics';
 import { AuthHeading } from '@/modules/auth/components/AuthHeading';
 import { isValidEmail, validate } from '@/modules/auth/lib/validation';
 import { useSession } from '@/modules/auth/session';
@@ -13,6 +21,7 @@ import { ScreenHeader } from '@/shared/components/ScreenHeader';
 import { useToast } from '@/shared/components/Toast';
 import { Box, Button, Text, TextField } from '@/shared/components/ui';
 import { ApiError, errorMessage } from '@/shared/lib/api';
+import type { BiometricCredential } from '@/shared/lib/storage';
 
 const STAGGER = 70;
 
@@ -26,6 +35,47 @@ export function LoginScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [biometric, setBiometric] = useState<{
+    kind: BiometricKind;
+    credential: BiometricCredential;
+  } | null>(null);
+
+  // Offer biometric sign-in only when this device has an enrolled sensor and a stored credential.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const [kind, credential] = await Promise.all([getBiometricKind(), getStoredCredential()]);
+      if (!cancelled && kind !== 'none' && credential) setBiometric({ kind, credential });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const biometricLogin = useMutation({
+    mutationFn: async () => {
+      if (!biometric) return null;
+      const ok = await promptBiometric(`Sign in with ${biometricLabel(biometric.kind)}`);
+      if (!ok) return null;
+      const { email: storedEmail, deviceId, biometricToken } = biometric.credential;
+      return authApi.loginBiometric({ Email: storedEmail, deviceId, biometricToken });
+    },
+    onSuccess: async (data) => {
+      if (!data) return;
+      await signIn(data.token, data.user);
+      router.replace('/');
+    },
+    onError: async (error) => {
+      // A stale token (password changed, device removed server-side) can never succeed again.
+      if (error instanceof ApiError && error.status === 401) {
+        await clearStoredCredential();
+        setBiometric(null);
+        toast.error('Biometric sign-in expired', 'Please sign in with your password again.');
+        return;
+      }
+      toast.error('Could not sign in', errorMessage(error));
+    },
+  });
 
   const login = useMutation({
     mutationFn: () => authApi.login(email.trim(), password),
@@ -56,9 +106,20 @@ export function LoginScreen() {
       <ScreenHeader />
       <KeyboardScreen
         footer={
-          <Button onPress={submit} loading={login.isPending}>
-            Log in
-          </Button>
+          <Box gap="sm">
+            <Button onPress={submit} loading={login.isPending}>
+              Log in
+            </Button>
+            {biometric ? (
+              <Button
+                variant="outline"
+                icon={biometric.kind === 'face' ? 'scan-outline' : 'finger-print-outline'}
+                loading={biometricLogin.isPending}
+                onPress={() => biometricLogin.mutate()}>
+                {`Sign in with ${biometricLabel(biometric.kind)}`}
+              </Button>
+            ) : null}
+          </Box>
         }>
         <AuthHeading title="Welcome back" subtitle="Log in to manage your bookings and messages." />
 

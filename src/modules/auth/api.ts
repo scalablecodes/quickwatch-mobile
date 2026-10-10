@@ -1,6 +1,6 @@
 import { api } from '@/shared/lib/api';
 
-import type { AuthResponse, RegisterInput, User, UserRole } from './types';
+import type { AuthResponse, BiometricDevice, RegisterInput, User, UsState, UserRole } from './types';
 
 export const authApi = {
   login: (Email: string, Password: string) =>
@@ -25,6 +25,32 @@ export const authApi = {
       { Email, Token, Password },
       { anonymous: true }
     ),
+
+  /** Completes verification from the link in the welcome email (deep-linked into the app). */
+  verifyEmail: (token: string, email: string) =>
+    api.get<{ message: string; emailVerified: boolean }>('/users/verify-email', { token, email }),
+
+  /** Reference data for the state picker. */
+  states: () => api.get<{ states: UsState[] }>('/users/states'),
+
+  /**
+   * Registers this device for biometric sign-in. Requires the password, so it is only
+   * offered right after a successful password login or re-authentication.
+   */
+  registerBiometric: (input: {
+    Email: string;
+    Password: string;
+    deviceId: string;
+    deviceName?: string;
+  }) =>
+    api.post<{ message: string; device: BiometricDevice; biometricToken: string }>(
+      '/users/register-biometric',
+      input,
+      { anonymous: true }
+    ),
+
+  loginBiometric: (input: { Email: string; deviceId: string; biometricToken: string }) =>
+    api.post<AuthResponse>('/users/login-biometric', input, { anonymous: true }),
 
   me: () => api.get<{ user: User }>('/users/me'),
 

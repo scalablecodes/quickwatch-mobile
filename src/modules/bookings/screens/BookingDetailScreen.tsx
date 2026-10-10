@@ -54,7 +54,10 @@ export function BookingDetailScreen() {
   const accept = useBookingMutation(() => bookingsApi.accept(id));
   const lifecycle = useBookingMutation(
     (vars: { status: 'declined' | 'inProgress' | 'completed' | 'cancelled'; reason?: string }) =>
-      bookingsApi.setLifecycle(id, vars.status, vars.reason)
+      // Cancellation has a dedicated endpoint that records who cancelled and why.
+      vars.status === 'cancelled'
+        ? bookingsApi.cancel(id, vars.reason)
+        : bookingsApi.setLifecycle(id, vars.status, vars.reason)
   );
   const requestPayout = useBookingMutation(() => paymentsApi.requestPayout(id));
   const refund = useBookingMutation(() => paymentsApi.refund(id));

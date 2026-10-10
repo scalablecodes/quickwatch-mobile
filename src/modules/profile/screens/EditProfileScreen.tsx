@@ -1,14 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
+import { authApi } from '@/modules/auth/api';
 import { isValidPhone, validate } from '@/modules/auth/lib/validation';
 import { useSession } from '@/modules/auth/session';
 import type { PickedFile } from '@/modules/kyc/api';
 import { profileApi } from '@/modules/profile/api';
-import { OptionList } from '@/shared/components/Field';
+import { OptionList, PickerField } from '@/shared/components/Field';
+import { SelectSheet } from '@/shared/components/SelectSheet';
 import { KeyboardScreen } from '@/shared/components/KeyboardScreen';
 import { ScreenHeader } from '@/shared/components/ScreenHeader';
 import { useToast } from '@/shared/components/Toast';
@@ -42,6 +44,20 @@ export function EditProfileScreen() {
     hourlyRate: user?.hourlyRate ? String(user.hourlyRate) : '',
   });
   const [picture, setPicture] = useState<PickedFile | null>(null);
+  const [statePickerOpen, setStatePickerOpen] = useState(false);
+
+  // Reference list for the state picker. Older API deployments don't expose it yet,
+  // so a failure quietly falls back to a plain text field.
+  const states = useQuery({
+    queryKey: ['us-states'],
+    queryFn: async () => (await authApi.states()).states,
+    staleTime: Infinity,
+    retry: false,
+  });
+  const stateOptions = (states.data ?? []).map((item) => ({
+    label: item.name,
+    value: item.abbreviation,
+  }));
   const [errors, setErrors] = useState<Partial<Record<keyof typeof form, string>>>({});
 
   const set = (key: keyof typeof form) => (value: string) => {
@@ -193,7 +209,20 @@ export function EditProfileScreen() {
               <TextField label="City" value={form.city} onChangeText={set('city')} />
             </Box>
             <Box flex={1}>
-              <TextField label="State" value={form.state} onChangeText={set('state')} />
+              {stateOptions.length ? (
+                <PickerField
+                  label="State"
+                  placeholder="Select"
+                  value={
+                    stateOptions.find((o) => o.value === form.state)?.label ||
+                    form.state ||
+                    undefined
+                  }
+                  onPress={() => setStatePickerOpen(true)}
+                />
+              ) : (
+                <TextField label="State" value={form.state} onChangeText={set('state')} />
+              )}
             </Box>
           </Box>
           <TextField
@@ -225,6 +254,15 @@ export function EditProfileScreen() {
           </Box>
         ) : null}
       </KeyboardScreen>
+      <SelectSheet
+        visible={statePickerOpen}
+        title="State"
+        searchable
+        options={stateOptions}
+        value={form.state}
+        onSelect={set('state')}
+        onClose={() => setStatePickerOpen(false)}
+      />
     </Box>
   );
 }

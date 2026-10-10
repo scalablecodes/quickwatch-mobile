@@ -20,8 +20,29 @@ export function VerifyEmailScreen() {
   const toast = useToast();
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
-  const { email = '', role } = useLocalSearchParams<{ email?: string; role?: string }>();
+  const {
+    email = '',
+    role,
+    token,
+  } = useLocalSearchParams<{ email?: string; role?: string; token?: string }>();
   const [cooldown, setCooldown] = useState(0);
+  const [verified, setVerified] = useState(false);
+
+  // Deep link from the verification email (quick-watch://verify-email?token=…&email=…).
+  const verify = useMutation({
+    mutationFn: () => authApi.verifyEmail(token as string, email),
+    onSuccess: () => {
+      setVerified(true);
+      toast.success('Email verified', 'You can log in now.');
+    },
+    onError: (error) => toast.error('Verification failed', errorMessage(error)),
+  });
+
+  const canVerify = Boolean(token && email);
+  useEffect(() => {
+    if (canVerify && verify.isIdle) verify.mutate();
+    // Runs once per deep link; `verify` is stable for the life of the screen.
+  }, [canVerify, verify]);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -76,14 +97,17 @@ export function VerifyEmailScreen() {
         <Animated.View entering={FadeInUp.delay(100).duration(450)}>
           <Box gap="s" alignItems="center">
             <Text variant="h1" textAlign="center">
-              Check your inbox
+              {verified ? 'Email verified' : verify.isPending ? 'Verifying…' : 'Check your inbox'}
             </Text>
             <Text variant="p16" color="textSecondary" textAlign="center">
-              We sent a verification link to{'\n'}
+              {verified ? 'Your address is confirmed:' : 'We sent a verification link to'}
+              {'\n'}
               <Text variant="p16SemiBold">{email}</Text>
             </Text>
             <Text variant="p14" color="textMuted" textAlign="center">
-              Open it to activate your account, then come back and log in.
+              {verified
+                ? 'Your account is active.'
+                : 'Open it to activate your account, then come back and log in.'}
               {role === 'Babysitter'
                 ? ' Sitter profiles are also reviewed by our team before bookings open up.'
                 : ''}

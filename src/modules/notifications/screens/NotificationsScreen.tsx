@@ -4,7 +4,12 @@ import { FlatList, RefreshControl } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useMarkAllRead, useMarkRead, useNotifications } from '@/modules/notifications/queries';
+import {
+  useDeleteNotification,
+  useMarkAllRead,
+  useMarkRead,
+  useNotifications,
+} from '@/modules/notifications/queries';
 import type { AppNotification } from '@/modules/notifications/types';
 import { ScreenHeader } from '@/shared/components/ScreenHeader';
 import {
@@ -38,6 +43,7 @@ export function NotificationsScreen() {
   const { data, isLoading, refetch, isRefetching } = useNotifications();
   const markRead = useMarkRead();
   const markAll = useMarkAllRead();
+  const remove = useDeleteNotification();
 
   const open = (n: AppNotification) => {
     if (!n.readAt) markRead.mutate(n._id);
@@ -124,15 +130,20 @@ export function NotificationsScreen() {
                         {item.message}
                       </Text>
                     </Box>
-                    {unread ? (
-                      <Box
-                        width={8}
-                        height={8}
-                        borderRadius="full"
-                        backgroundColor="accent"
-                        alignSelf="center"
+                    <Box alignItems="center" justifyContent="center" gap="s">
+                      {unread ? (
+                        <Box width={8} height={8} borderRadius="full" backgroundColor="accent" />
+                      ) : null}
+                      <IconButton
+                        icon="trash-outline"
+                        accessibilityLabel={`Delete ${item.title}`}
+                        size={30}
+                        iconSize={15}
+                        backgroundColor="transparent"
+                        color="textHint"
+                        onPress={() => remove.mutate(item._id)}
                       />
-                    ) : null}
+                    </Box>
                   </Box>
                 </Pressable>
               </Animated.View>

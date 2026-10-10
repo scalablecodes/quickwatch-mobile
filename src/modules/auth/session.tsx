@@ -9,8 +9,9 @@ import {
   type PropsWithChildren,
 } from 'react';
 
+import { notificationsApi } from '@/modules/notifications/api';
 import { onUnauthorized } from '@/shared/lib/api';
-import { tokenStorage, userStorage } from '@/shared/lib/storage';
+import { pushTokenStorage, tokenStorage, userStorage } from '@/shared/lib/storage';
 
 import { authApi } from './api';
 import type { User } from './types';
@@ -46,9 +47,13 @@ export function SessionProvider({ children }: PropsWithChildren) {
   }, []);
 
   const signOut = useCallback(async () => {
+    // Stop push for this device while the token is still valid; failures must not block sign-out.
+    const pushToken = await pushTokenStorage.get();
+    if (pushToken) await notificationsApi.removeDevice(pushToken).catch(() => {});
+
     setUserState(null);
     queryClient.clear();
-    await Promise.all([tokenStorage.clear(), userStorage.clear()]);
+    await Promise.all([tokenStorage.clear(), userStorage.clear(), pushTokenStorage.clear()]);
   }, [queryClient]);
 
   const signIn = useCallback(
