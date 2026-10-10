@@ -1,3 +1,4 @@
+import { logApiCall } from './dev-network-log';
 import { env } from './env';
 import { tokenStorage } from './storage';
 
@@ -66,7 +67,9 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   const isForm = typeof FormData !== 'undefined' && body instanceof FormData;
   if (body && !isForm) headers['Content-Type'] = 'application/json';
 
-  const response = await fetch(buildUrl(path, query), {
+  const url = buildUrl(path, query);
+  const startedAt = Date.now();
+  const response = await fetch(url, {
     method,
     headers,
     body: body ? (isForm ? body : JSON.stringify(body)) : undefined,
@@ -81,6 +84,17 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
       payload = { message: text };
     }
   }
+
+  logApiCall({
+    url,
+    method,
+    requestHeaders: headers,
+    requestBody: isForm ? '[multipart form data]' : body,
+    status: response.status,
+    responseHeaders: Object.fromEntries(response.headers.entries()),
+    responseBody: payload,
+    duration: Date.now() - startedAt,
+  });
 
   if (!response.ok) {
     const error = new ApiError(response.status, payload);
