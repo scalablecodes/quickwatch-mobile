@@ -1,5 +1,5 @@
 import { ThemeProvider as RestyleThemeProvider } from '@shopify/restyle';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -11,15 +11,29 @@ import { PaymentsProvider } from '@/shared/components/PaymentsProvider';
 import { SplashOverlay } from '@/shared/components/SplashOverlay';
 import { ToastProvider } from '@/shared/components/Toast';
 import { useColorScheme } from '@/shared/hooks/use-color-scheme';
+import { queryClient } from '@/shared/lib/query-client';
 import { darkTheme, fontAssets, theme } from '@/shared/theme';
 
-SplashScreen.preventAutoHideAsync();
+/**
+ * Native bottom sheet sized to its content. These live on the root stack, not inside
+ * `settings/`: a sheet presented as the first route of a nested stack has nothing behind
+ * it, so iOS falls back to a full-screen card.
+ */
+const sheetOptions = {
+  presentation: 'formSheet',
+  sheetAllowedDetents: 'fitToContents',
+  sheetGrabberVisible: true,
+  sheetCornerRadius: theme.borderRadii.sheet,
+} as const;
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { staleTime: 30_000, retry: 1, refetchOnWindowFocus: false },
-  },
-});
+// Reactotron attaches to the query cache and network; development builds only, so it is
+// required lazily rather than imported (keeps it out of release bundles).
+if (__DEV__) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  require('@/shared/lib/reactotron');
+}
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const isDark = useColorScheme() === 'dark';
@@ -92,6 +106,8 @@ function RootStack() {
       </Stack.Protected>
       <Stack.Protected guard={signedIn}>
         <Stack.Screen name="settings" />
+        <Stack.Screen name="switch-role" options={sheetOptions} />
+        <Stack.Screen name="biometric" options={sheetOptions} />
       </Stack.Protected>
       <Stack.Protected guard={signedIn && active}>
         <Stack.Screen name="(tabs)" />

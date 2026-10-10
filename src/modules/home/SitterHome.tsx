@@ -219,7 +219,14 @@ function Stat({
 }) {
   const { colors } = useTheme();
   return (
-    <Card flex={1} backgroundColor={bg} gap="xs" padding="sm" variant="elevated">
+    // The card variant sets its own background, so the brand tile uses the `primary`
+    // variant rather than an overridden `backgroundColor` (which it would win against).
+    <Card
+      flex={1}
+      gap="xs"
+      padding="sm"
+      variant={bg === 'primary' ? 'primary' : 'elevated'}
+      borderRadius="xl">
       <Ionicons
         name={icon}
         size={18}

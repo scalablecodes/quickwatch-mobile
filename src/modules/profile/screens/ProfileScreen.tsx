@@ -117,7 +117,7 @@ export function ProfileScreen() {
         <Animated.View entering={FadeInUp.delay(120).duration(400)}>
           <Pressable
             accessibilityRole="button"
-            onPress={() => router.push('/settings/switch-role')}>
+            onPress={() => router.push('/switch-role')}>
             <Card variant="primary" flexDirection="row" alignItems="center" gap="sm" padding="m">
               <Box
                 width={40}
@@ -172,7 +172,7 @@ export function ProfileScreen() {
               subtitle={
                 biometricOn ? 'Enabled on this device' : 'Use Face ID or fingerprint to log in'
               }
-              onPress={() => router.push('/settings/biometric')}
+              onPress={() => router.push('/biometric')}
             />
             <Divider />
             <ListRow
