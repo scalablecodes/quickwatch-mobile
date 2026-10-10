@@ -33,6 +33,18 @@ export function SwitchRoleSheet() {
     onSuccess: async ({ token, user: next }) => {
       await signIn(token, next);
       queryClient.clear();
+
+      // The API can answer 200 "Dashboard switched" while still returning the old role,
+      // so trust the returned user rather than the message before claiming success.
+      if (next.role !== target) {
+        toast.error(
+          'Switch did not take effect',
+          `The server kept this account in ${next.role === 'Mother' ? 'parent' : 'babysitter'} mode. Please try again later.`
+        );
+        router.back();
+        return;
+      }
+
       toast.success(
         onboarded
           ? `Switched to ${label} mode`
