@@ -12,7 +12,7 @@ import { useTheme } from '@/shared/theme';
 const hero = require('@/assets/images/mother_and_child.jpg');
 
 const highlights: { icon: 'shield-checkmark' | 'flash' | 'chatbubbles'; text: string }[] = [
-  { icon: 'shield-checkmark', text: 'Every sitter is reviewed and ID-verified' },
+  { icon: 'shield-checkmark', text: 'Every sitter is background checked' },
   { icon: 'flash', text: 'Book trusted care in minutes' },
   { icon: 'chatbubbles', text: 'Chat, pay and review in one place' },
 ];

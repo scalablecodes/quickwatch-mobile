@@ -9,11 +9,25 @@ import { authApi } from './api';
 
 export type BiometricKind = 'face' | 'fingerprint' | 'iris' | 'none';
 
+/** RFC-4122-shaped fallback for builds without expo-crypto's native module. */
+function fallbackUuid(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.floor(Math.random() * 16);
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 /** Stable id for this install; the API registers biometric devices against it. */
 export async function getDeviceId(): Promise<string> {
   const existing = await deviceIdStorage.get();
   if (existing) return existing;
-  const id = Crypto.randomUUID();
+  let id: string;
+  try {
+    id = Crypto.randomUUID();
+  } catch {
+    id = fallbackUuid();
+  }
   await deviceIdStorage.set(id);
   return id;
 }
@@ -21,15 +35,20 @@ export async function getDeviceId(): Promise<string> {
 /** Which sensor this device offers, and whether the user has enrolled in it. */
 export async function getBiometricKind(): Promise<BiometricKind> {
   if (Platform.OS === 'web') return 'none';
-  const [hasHardware, isEnrolled, types] = await Promise.all([
-    LocalAuthentication.hasHardwareAsync(),
-    LocalAuthentication.isEnrolledAsync(),
-    LocalAuthentication.supportedAuthenticationTypesAsync(),
-  ]);
-  if (!hasHardware || !isEnrolled) return 'none';
-  if (types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) return 'face';
-  if (types.includes(LocalAuthentication.AuthenticationType.IRIS)) return 'iris';
-  return 'fingerprint';
+  try {
+    const [hasHardware, isEnrolled, types] = await Promise.all([
+      LocalAuthentication.hasHardwareAsync(),
+      LocalAuthentication.isEnrolledAsync(),
+      LocalAuthentication.supportedAuthenticationTypesAsync(),
+    ]);
+    if (!hasHardware || !isEnrolled) return 'none';
+    if (types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) return 'face';
+    if (types.includes(LocalAuthentication.AuthenticationType.IRIS)) return 'iris';
+    return 'fingerprint';
+  } catch {
+    // Older binaries predate the native module; hide the feature rather than crash.
+    return 'none';
+  }
 }
 
 /** Human label for the sensor, used in buttons and settings copy. */
@@ -42,12 +61,16 @@ export function biometricLabel(kind: BiometricKind): string {
 
 /** Prompts the OS sensor. Returns false when the user cancels or it fails. */
 export async function promptBiometric(reason: string): Promise<boolean> {
-  const result = await LocalAuthentication.authenticateAsync({
-    promptMessage: reason,
-    cancelLabel: 'Cancel',
-    disableDeviceFallback: false,
-  });
-  return result.success;
+  try {
+    const result = await LocalAuthentication.authenticateAsync({
+      promptMessage: reason,
+      cancelLabel: 'Cancel',
+      disableDeviceFallback: false,
+    });
+    return result.success;
+  } catch {
+    return false;
+  }
 }
 
 export const getStoredCredential = () => biometricStorage.get();
@@ -57,7 +80,10 @@ export const clearStoredCredential = () => biometricStorage.clear();
  * Enables biometric sign-in: confirms the sensor, exchanges the password for a device
  * token, and stores that token securely. The password is never persisted.
  */
-export async function enableBiometricLogin(email: string, password: string): Promise<BiometricCredential> {
+export async function enableBiometricLogin(
+  email: string,
+  password: string
+): Promise<BiometricCredential> {
   const kind = await getBiometricKind();
   if (kind === 'none') throw new Error('This device has no enrolled biometrics.');
   const confirmed = await promptBiometric(`Enable ${biometricLabel(kind)} sign-in`);

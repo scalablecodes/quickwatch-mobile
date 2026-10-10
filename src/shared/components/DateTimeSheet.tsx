@@ -108,7 +108,8 @@ function Sheet({
             themeVariant={scheme === 'dark' ? 'dark' : 'light'}
             accentColor={colors.primary}
             onChange={(_e, date) => date && setDraft(date)}
-            style={styles.picker}
+            // iOS collapses the picker to a sliver without an explicit height.
+            style={[styles.picker, request.mode === 'date' ? styles.calendar : styles.spinner]}
           />
           <Button
             onPress={() => {
@@ -123,7 +124,11 @@ function Sheet({
   );
 }
 
+// Heights match UIDatePicker's intrinsic sizes: the inline calendar needs ~360,
+// the wheel ~216. Without them iOS lays the picker out at near-zero height.
 const styles = StyleSheet.create({
   sheet: { position: 'absolute', left: 0, right: 0, bottom: 0 },
-  picker: { alignSelf: 'center' },
+  picker: { alignSelf: 'stretch', width: '100%' },
+  calendar: { height: 360 },
+  spinner: { height: 216 },
 });
