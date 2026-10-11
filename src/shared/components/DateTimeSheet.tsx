@@ -4,12 +4,22 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker';
 import { useCallback, useState } from 'react';
 import { Modal, Platform, Pressable, StyleSheet } from 'react-native';
-import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  FadeIn,
+  FadeOut,
+  SlideInDown,
+  SlideOutDown,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Box, Button, Text } from '@/shared/components/ui';
 import { useColorScheme } from '@/shared/hooks/use-color-scheme';
 import { useTheme } from '@/shared/theme';
+
+// Matches SelectSheet: a plain ease-out slide, since a spring overshoot reads as noisy.
+const ENTER_MS = 220;
+const EXIT_MS = 180;
 
 type Mode = 'date' | 'time';
 
@@ -70,8 +80,8 @@ function Sheet({
   return (
     <Modal transparent animationType="none" visible onRequestClose={close}>
       <Animated.View
-        entering={FadeIn.duration(150)}
-        exiting={FadeOut.duration(150)}
+        entering={FadeIn.duration(ENTER_MS)}
+        exiting={FadeOut.duration(EXIT_MS)}
         style={[StyleSheet.absoluteFill, { backgroundColor: colors.scrim }]}>
         <Pressable
           accessibilityRole="button"
@@ -81,8 +91,8 @@ function Sheet({
         />
       </Animated.View>
       <Animated.View
-        entering={SlideInDown.springify().damping(20)}
-        exiting={SlideOutDown.duration(200)}
+        entering={SlideInDown.duration(ENTER_MS).easing(Easing.out(Easing.cubic))}
+        exiting={SlideOutDown.duration(EXIT_MS).easing(Easing.in(Easing.cubic))}
         style={styles.sheet}>
         <Box
           backgroundColor="cardBackground"
