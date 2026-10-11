@@ -3,23 +3,12 @@ import DateTimePicker, {
   type DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import { useCallback, useState } from 'react';
-import { Modal, Platform, Pressable, StyleSheet } from 'react-native';
-import Animated, {
-  Easing,
-  FadeIn,
-  FadeOut,
-  SlideInDown,
-  SlideOutDown,
-} from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Platform, StyleSheet } from 'react-native';
 
+import { BottomSheet } from '@/shared/components/BottomSheet';
 import { Box, Button, Text } from '@/shared/components/ui';
 import { useColorScheme } from '@/shared/hooks/use-color-scheme';
 import { useTheme } from '@/shared/theme';
-
-// Matches SelectSheet: a plain ease-out slide, since a spring overshoot reads as noisy.
-const ENTER_MS = 220;
-const EXIT_MS = 180;
 
 type Mode = 'date' | 'time';
 
@@ -33,7 +22,7 @@ type Request = {
 
 /**
  * Cross-platform date/time picking. Android uses the native dialog; iOS shows an inline
- * picker in a bottom sheet with a Done button. Render `<sheet.element />` once per screen.
+ * picker in a bottom sheet with a Done button. Render `{sheet.element}` once per screen.
  */
 export function useDateTimeSheet() {
   const [request, setRequest] = useState<Request | null>(null);
@@ -72,43 +61,13 @@ function Sheet({
   setDraft: (d: Date) => void;
   close: () => void;
 }) {
-  const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const scheme = useColorScheme();
-  if (!request) return null;
 
   return (
-    <Modal transparent animationType="none" visible onRequestClose={close}>
-      <Animated.View
-        entering={FadeIn.duration(ENTER_MS)}
-        exiting={FadeOut.duration(EXIT_MS)}
-        style={[StyleSheet.absoluteFill, { backgroundColor: colors.scrim }]}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Dismiss"
-          style={StyleSheet.absoluteFill}
-          onPress={close}
-        />
-      </Animated.View>
-      <Animated.View
-        entering={SlideInDown.duration(ENTER_MS).easing(Easing.out(Easing.cubic))}
-        exiting={SlideOutDown.duration(EXIT_MS).easing(Easing.in(Easing.cubic))}
-        style={styles.sheet}>
-        <Box
-          backgroundColor="cardBackground"
-          borderTopLeftRadius="sheet"
-          borderTopRightRadius="sheet"
-          padding="ml"
-          gap="s"
-          style={{ paddingBottom: insets.bottom + 16 }}>
-          <Box
-            alignSelf="center"
-            width={40}
-            height={4}
-            borderRadius="full"
-            backgroundColor="borderStrong"
-            marginBottom="s"
-          />
+    <BottomSheet visible={request !== null} onClose={close}>
+      {request ? (
+        <Box paddingHorizontal="ml" gap="s">
           <Text variant="h3">{request.title}</Text>
           <DateTimePicker
             mode={request.mode}
@@ -129,15 +88,14 @@ function Sheet({
             Done
           </Button>
         </Box>
-      </Animated.View>
-    </Modal>
+      ) : null}
+    </BottomSheet>
   );
 }
 
 // Heights match UIDatePicker's intrinsic sizes: the inline calendar needs ~360,
 // the wheel ~216. Without them iOS lays the picker out at near-zero height.
 const styles = StyleSheet.create({
-  sheet: { position: 'absolute', left: 0, right: 0, bottom: 0 },
   picker: { alignSelf: 'stretch', width: '100%' },
   calendar: { height: 360 },
   spinner: { height: 216 },
