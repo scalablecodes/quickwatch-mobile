@@ -259,6 +259,7 @@ export function EditProfileScreen() {
         title="State"
         searchable
         options={stateOptions}
+        showValue
         value={form.state}
         onSelect={set('state')}
         onClose={() => setStatePickerOpen(false)}
